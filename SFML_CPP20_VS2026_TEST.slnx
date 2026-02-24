@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SFML_CPP20_VS2026_TEST.vcxproj" Id="cd983b4f-317d-4684-ad45-c32032fc77e6" />
+</Solution>

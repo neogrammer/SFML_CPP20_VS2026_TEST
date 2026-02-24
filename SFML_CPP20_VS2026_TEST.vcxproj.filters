@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="assets">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="assets\fonts">
+      <UniqueIdentifier>{3ffcf2ed-8938-4212-8255-87e1a007e7f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="third_party\imgui">
+      <UniqueIdentifier>{c0d3380c-7352-4fbe-a097-b0cdd9e7a464}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\imgui-sfml">
+      <UniqueIdentifier>{0898d388-2845-4b6b-bd6c-d48b7aacdbc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\imgui\misc">
+      <UniqueIdentifier>{446f3300-3d47-4649-87e4-4424f7b03859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\imgui\misc\freetype">
+      <UniqueIdentifier>{337fc899-7930-4242-9aed-0e0031e68a2e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
+      <Filter>third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui\imgui_draw.cpp">
+      <Filter>third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui\imgui_tables.cpp">
+      <Filter>third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui\imgui_widgets.cpp">
+      <Filter>third_party\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp">
+      <Filter>third_party\imgui-sfml</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\third_party\imgui\misc\freetype\imgui_freetype.cpp">
+      <Filter>third_party\imgui\misc\freetype</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\bubbly.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\blue_winter.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\faith.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+  </ItemGroup>
+</Project>
