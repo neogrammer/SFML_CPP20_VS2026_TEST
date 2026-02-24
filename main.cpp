@@ -116,16 +116,21 @@ int main()
         // Set ImGui Stuff last
         ImGui::PushFont(f2);
         ImGui::Begin("Hello");
-
+        ImGui::PopFont();
+        ImGui::PushFont(f0);
         ImGui::Text("Current font ptr: %p", (void*)ImGui::GetFont());
         ImGui::Text("f2 ptr:          %p", (void*)f2);
         ImGui::Text("Current size:    %.1f", ImGui::GetFontSize());
 
         ImGui::Text("Faith font test");
+        ImGui::PopFont();
+
+        ImGui::PushFont(f1);
+
         ImGui::Button("Button test");
+        ImGui::PopFont();
 
         ImGui::End();
-        ImGui::PopFont();
 
 
 
