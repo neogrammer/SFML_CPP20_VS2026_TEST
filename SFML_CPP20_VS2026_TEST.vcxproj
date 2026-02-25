@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)code_files\third_party\imgui\misc\freetype;$(ProjectDir)code_files\third_party\imgui-sfml;$(ProjectDir)code_files;$(ProjectDir)code_files\third_party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)code_files\third_party\imgui\misc\freetype;$(ProjectDir)code_files\third_party\imgui-sfml;$(ProjectDir)code_files\game;$(ProjectDir)code_files;$(ProjectDir)code_files\third_party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -140,6 +140,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code_files\engine\Engine.cpp" />
+    <ClCompile Include="code_files\engine\systems\ComponentSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\AnimationSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\BattleSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\EnemySystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\EventSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\InputSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\InventorySystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\LevellingSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\LifeSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\MapSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\NPCSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\PhysicsSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\PickupSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\RenderSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\ScriptSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\StateSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\component_systems\UISystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\MainSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\DecorSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\DialogSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\GameLoadSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\GameOverSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\GameSaveSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\GameStartSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneLoadSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneStateSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneTickSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneTransitionSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\StageLoadSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\StageSelectSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\StageStateSystem.cpp" />
+    <ClCompile Include="code_files\engine\systems\main_systems\StageTickSystem.cpp" />
+    <ClCompile Include="code_files\game\Actor.cpp" />
+    <ClCompile Include="code_files\game\Component.cpp" />
+    <ClCompile Include="code_files\game\Game.cpp" />
     <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp" />
     <ClCompile Include="code_files\third_party\imgui\imgui_draw.cpp" />
@@ -151,7 +187,60 @@
   <ItemGroup>
     <Font Include="assets\fonts\blue_winter.ttf" />
     <Font Include="assets\fonts\bubbly.ttf" />
+    <Font Include="assets\fonts\Dino.ttf" />
     <Font Include="assets\fonts\faith.ttf" />
+    <Font Include="assets\fonts\hard.otf" />
+    <Font Include="assets\fonts\Nova.otf" />
+    <Font Include="assets\fonts\Rebel.ttf" />
+    <Font Include="assets\fonts\Steel.otf" />
+    <Font Include="assets\fonts\Sum.ttf" />
+    <Font Include="assets\fonts\Techno.otf" />
+    <Font Include="assets\fonts\Venite.ttf" />
+    <Font Include="assets\fonts\VeniteStr8.ttf" />
+    <Font Include="assets\fonts\Warr.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code_files\engine\Engine.h" />
+    <ClInclude Include="code_files\engine\systems\ComponentSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\AnimationSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\BattleSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\EnemySystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\EventSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\InputSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\InventorySystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\LevellingSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\LifeSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\MapSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\NPCSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\PhysicsSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\PickupSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\RenderSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\ScriptSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\StateSystem.h" />
+    <ClInclude Include="code_files\engine\systems\component_systems\UISystem.h" />
+    <ClInclude Include="code_files\engine\systems\MainSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\DecorSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\DialogSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\GameLoadSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\GameOverSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\GameSaveSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\GameStartSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneLoadSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneStateSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneTickSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneTransitionSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\StageLoadSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\StageSelectSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\StageStateSystem.h" />
+    <ClInclude Include="code_files\engine\systems\main_systems\StageTickSystem.h" />
+    <ClInclude Include="code_files\game\Actor.h" />
+    <ClInclude Include="code_files\game\Assisstant.cpp" />
+    <ClInclude Include="code_files\game\Assistant.h" />
+    <ClInclude Include="code_files\game\Component.h" />
+    <ClInclude Include="code_files\game\Event.h" />
+    <ClInclude Include="code_files\game\Game.h" />
+    <ClInclude Include="code_files\game\Scene.h" />
+    <ClInclude Include="code_files\game\Script.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

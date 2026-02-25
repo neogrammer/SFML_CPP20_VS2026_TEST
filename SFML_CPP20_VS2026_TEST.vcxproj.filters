@@ -28,11 +28,38 @@
     <Filter Include="third_party\imgui\misc\freetype">
       <UniqueIdentifier>{337fc899-7930-4242-9aed-0e0031e68a2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code_files\game">
+      <UniqueIdentifier>{71583fff-33c4-45cc-8fb6-caf485bc7ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{d422bd7d-75f2-4adb-9de6-acf546592241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\components">
+      <UniqueIdentifier>{e1b74cfc-8316-41b8-b250-a667b00fd594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\actors">
+      <UniqueIdentifier>{7682dc24-672a-4022-b87a-176c6f0712d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\assistants">
+      <UniqueIdentifier>{2d533c2f-2677-4a54-82d8-baa06c0cc952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\engine">
+      <UniqueIdentifier>{144c1af7-b232-4685-8bf0-e6a339eddf3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\engine\systems">
+      <UniqueIdentifier>{3eefdd4d-d2c1-4632-9c68-7ffd142f8781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\engine\systems\main_systems">
+      <UniqueIdentifier>{a50ff33d-4e97-44bf-a0f2-1a8a96b60379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\engine\systems\component_systems">
+      <UniqueIdentifier>{d92aaa2f-24f6-4be5-af4a-2e4db6e52546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\app">
+      <UniqueIdentifier>{92fb2837-60df-4e45-b358-2a58d336f073}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
       <Filter>third_party\imgui</Filter>
     </ClCompile>
@@ -51,6 +78,117 @@
     <ClCompile Include="code_files\third_party\imgui\misc\freetype\imgui_freetype.cpp">
       <Filter>third_party\imgui\misc\freetype</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\Game.cpp">
+      <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\Actor.cpp">
+      <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\Component.cpp">
+      <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\AnimationSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\BattleSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\EnemySystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\EventSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\InputSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\InventorySystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\LevellingSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\LifeSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\MapSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\NPCSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\PhysicsSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\PickupSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\RenderSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\ScriptSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\StateSystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\component_systems\UISystem.cpp">
+      <Filter>code_files\engine\systems\component_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\DecorSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\DialogSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\GameLoadSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\GameOverSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\GameSaveSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\GameStartSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneLoadSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneStateSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneTickSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\SceneTransitionSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\StageLoadSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\StageSelectSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\StageStateSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\main_systems\StageTickSystem.cpp">
+      <Filter>code_files\engine\systems\main_systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\Engine.cpp">
+      <Filter>code_files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\ComponentSystem.cpp">
+      <Filter>code_files\engine\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\systems\MainSystem.cpp">
+      <Filter>code_files\engine\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>code_files\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -62,5 +200,160 @@
     <Font Include="assets\fonts\faith.ttf">
       <Filter>assets\fonts</Filter>
     </Font>
+    <Font Include="assets\fonts\Dino.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\hard.otf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Nova.otf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Rebel.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Steel.otf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Sum.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Techno.otf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Venite.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\VeniteStr8.ttf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+    <Font Include="assets\fonts\Warr.otf">
+      <Filter>assets\fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code_files\game\Assisstant.cpp">
+      <Filter>code_files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\Engine.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\ComponentSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\MainSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\AnimationSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\BattleSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\EnemySystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\EventSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\InputSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\InventorySystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\LevellingSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\LifeSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\MapSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\NPCSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\PhysicsSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\PickupSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\RenderSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\ScriptSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\StateSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\component_systems\UISystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\DecorSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\DialogSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\GameLoadSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\GameOverSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\GameSaveSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\GameStartSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneLoadSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneStateSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneTickSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\SceneTransitionSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\StageLoadSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\StageSelectSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\StageStateSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\systems\main_systems\StageTickSystem.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Actor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Assistant.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Component.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Event.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Scene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Script.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
