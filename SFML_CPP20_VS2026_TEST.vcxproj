@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code_files\engine\Engine.cpp" />
+    <ClCompile Include="code_files\engine\state_machines\AIState.cpp" />
     <ClCompile Include="code_files\engine\systems\ComponentSystem.cpp" />
     <ClCompile Include="code_files\engine\systems\component_systems\AnimationSystem.cpp" />
     <ClCompile Include="code_files\engine\systems\component_systems\BattleSystem.cpp" />
@@ -201,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code_files\engine\Engine.h" />
+    <ClInclude Include="code_files\engine\state_machines\AIState.h" />
     <ClInclude Include="code_files\engine\systems\ComponentSystem.h" />
     <ClInclude Include="code_files\engine\systems\component_systems\AnimationSystem.h" />
     <ClInclude Include="code_files\engine\systems\component_systems\BattleSystem.h" />

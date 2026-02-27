@@ -58,6 +58,9 @@
     <Filter Include="code_files\app">
       <UniqueIdentifier>{92fb2837-60df-4e45-b358-2a58d336f073}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code_files\game\state_machines">
+      <UniqueIdentifier>{3741777b-fa35-40eb-a28f-88a062061cb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
@@ -79,12 +82,6 @@
       <Filter>third_party\imgui\misc\freetype</Filter>
     </ClCompile>
     <ClCompile Include="code_files\game\Game.cpp">
-      <Filter>code_files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\Actor.cpp">
-      <Filter>code_files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\Component.cpp">
       <Filter>code_files\game</Filter>
     </ClCompile>
     <ClCompile Include="code_files\engine\systems\component_systems\AnimationSystem.cpp">
@@ -189,6 +186,15 @@
     <ClCompile Include="main.cpp">
       <Filter>code_files\app</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\Actor.cpp">
+      <Filter>code_files\game\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\Component.cpp">
+      <Filter>code_files\game\components</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\engine\state_machines\AIState.cpp">
+      <Filter>code_files\game\state_machines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -232,9 +238,6 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code_files\game\Assisstant.cpp">
-      <Filter>code_files\game</Filter>
-    </ClInclude>
     <ClInclude Include="code_files\engine\Engine.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -354,6 +357,12 @@
     </ClInclude>
     <ClInclude Include="code_files\game\Script.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\engine\state_machines\AIState.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Assisstant.cpp">
+      <Filter>code_files\game\assistants</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
