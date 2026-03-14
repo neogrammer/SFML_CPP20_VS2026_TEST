@@ -1,4 +1,20 @@
 #include <Game.h>
+#include "Globs.h"
+
+void Game::processEvents()
+{}
+
+void Game::update(sf::Time deltaTime)
+{}
+
+void Game::handleKeyEvent(sf::Keyboard::Key key, bool isPressed)
+{}
+
+void Game::render()
+{}
+
+void Game::resizeBackground()
+{}
 
 bool Game::Initialize()
 {
@@ -19,27 +35,3 @@ void Game::Run()
 	// run the proper functions to make a game order
 }
 
-void Game::ProcessInput()
-{
-	// Poll devices for input and change flags
-}
-
-void Game::UpdateGame()
-{
-	// Update all objects, considering the flags
-}
-
-void Game::UpdateAnimations()
-{
-	// Animate to match the update
-}
-
-void Game::HandleCollisions()
-{
-	// Detect and Resolve collisions and change animations again along with state, save this for next frame
-}
-
-void Game::RenderFrame()
-{
-	// render the updates and animation reactions for the past frame
-}

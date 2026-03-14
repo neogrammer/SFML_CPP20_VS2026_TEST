@@ -44,33 +44,6 @@ int main()
 
     if (!f0 || !f1 || !f2) throw std::runtime_error("Font load failed");
     io.FontDefault = f0;                    // optional but nice
-    
-    //auto has = [&](ImFont* f, const char* label) {
-    //    auto* gA = f->FindGlyphNoFallback('A');
-    //    auto* ga = f->FindGlyphNoFallback('a');
-    //    auto* g0 = f->FindGlyphNoFallback('0');
-    //    std::cout << label
-    //        << " A:" << (gA != nullptr)
-    //        << " a:" << (ga != nullptr)
-    //        << " 0:" << (g0 != nullptr)
-    //        << " FontSize:" << f->FontSize
-    //        << " Glyphs:" << f->Glyphs.Size
-    //        << "\n";
-    //    };
-
-
-
- 
-
-
-    //for (ImWchar c = 'A'; c <= 'Z'; ++c)
-    //{
-    //    const ImFontGlyph* g = f2->FindGlyph(c);
-    //    if (g)
-    //        std::cout << char(c) << " AdvanceX: " << g->AdvanceX << "\n";
-    //}
-    //has(f1, "f1");
-    //has(f2, "f2");
     io.Fonts->FontBuilderIO = ImGuiFreeType::GetBuilderForFreeType();
     io.Fonts->Build();
     if (!ImGui::SFML::UpdateFontTexture())  // once
@@ -122,68 +95,7 @@ int main()
         //////////////////////////////
         // Update Game
         ImGui::SFML::Update(window, deltaClock.restart());
-        // Set ImGui Stuff last
-        //ImGui::PushFont(f2);
-        //ImGui::Begin("Hello");
-        //ImGui::PopFont();
-        //ImGui::PushFont(f0);
-        //ImGui::Text("Current font ptr: %p", (void*)ImGui::GetFont());
-        //ImGui::Text("f2 ptr:          %p", (void*)f2);
-        //ImGui::Text("Current size:    %.1f", ImGui::GetFontSize());
-
-        //ImGui::Text("Faith font test");
-        //ImGui::PopFont();
-
-        //ImGui::PushFont(f1);
-        //if (ImGui::BeginTabBar("MyTabBar"))
-        //{
-
-        //    if (ImGui::BeginTabItem("Avacado"))
-        //    {
-
-        //        ImGui::Button("Button test");
-        //        ImGui::EndTabItem();
-        //    }
-        //    if (ImGui::BeginTabItem("Broccoli"))
-        //    {
-        //        ImGui::Button("Press One");
-        //        ImGui::EndTabItem();
-
-        //    }
-        //    ImGui::EndTabBar();
-        //}
-        //const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD" };
-        //static int item_index = 0;
-        //ImGui::Combo("Combo", &item_index, items, IM_ARRAYSIZE(items));
-
-
-        //    ImGui::PopFont();
-
-        //char buffer[255];
-        //ImGui::PushFont(f1);
-        //ImGui::InputText("Default", buffer, 255);
-
-
-
-        //ImGui::PushFont(f1);
-        //ImGui::PushStyleColor(ImGuiCol_TitleBg, IM_COL32(46, 146, 246, 200));
-        //ImGui::PushStyleColor(ImGuiCol_TitleBgActive, IM_COL32(46, 146, 246, 255));
-        //ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, IM_COL32(46, 146, 246, 100));
-
-        //ImGui::Begin("UI");
-       
-        //ImGui::Text("TODO: Level Editor");
-
-
-        //ImGui::ShowDemoWindow();
-
-        //ImGui::End();
-
-        //ImGui::PopStyleColor();
-        //ImGui::PopStyleColor();
-        //ImGui::PopStyleColor();
-
-        //ImGui::PopFont();
+        
        
         ImGui::PushFont(f6);
         ImGui::Begin("YAY");
