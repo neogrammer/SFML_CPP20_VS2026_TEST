@@ -144,7 +144,6 @@
     <ClCompile Include="code_files\game\game_objects\AnimObj.cpp" />
     <ClCompile Include="code_files\game\GObj.cpp" />
     <ClCompile Include="code_files\game\Game.cpp" />
-    <ClCompile Include="code_files\game\GameState.cpp" />
     <ClCompile Include="code_files\game\Globs.cpp" />
     <ClCompile Include="code_files\game\res\Cfg.cpp" />
     <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp" />
@@ -173,6 +172,10 @@
   <ItemGroup>
     <ClInclude Include="code_files\game\Component.h" />
     <ClInclude Include="code_files\game\game_objects\AnimObj.h" />
+    <ClInclude Include="code_files\game\game_state\PlayState.h" />
+    <ClInclude Include="code_files\game\game_state\SplashState.h" />
+    <ClInclude Include="code_files\game\game_state\StateVar.h" />
+    <ClInclude Include="code_files\game\game_state\TitleState.h" />
     <ClInclude Include="code_files\game\GObj.h" />
     <ClInclude Include="code_files\game\Game.h" />
     <ClInclude Include="code_files\game\GameState.h" />

@@ -13,6 +13,11 @@
 #include "GObj.h"
 #include <memory>
 #include <utility>
+#include <variant>
+#include <optional>
+#include <map>
+#include <type_traits>
+#include "game_state/StateVar.h"
 
 class Game
 {
@@ -34,6 +39,7 @@ class Game
 	sf::Font bubblyFnt{ "assets/fonts/faith.ttf" };
 	sf::Text testTxt{ bubblyFnt };
 	sf::Clock mDeltaClock;
+	float delta;
 
 	sf::RenderWindow mWindow;
 	bool mShouldShutDown{ false };
@@ -44,7 +50,12 @@ class Game
 	void render();
 	void resizeBackground();
 
+	StateVar* currState{nullptr};
+	std::map<eStateID, StateVar> stateMap;
+	eStateID switchTo{ eStateID::None };
+
 public:
+
 	bool Initialize();
 	void Shutdown();
 	void Run();
@@ -53,4 +64,7 @@ public:
 	Game();
 	~Game();
 };
+
+
+
 #endif

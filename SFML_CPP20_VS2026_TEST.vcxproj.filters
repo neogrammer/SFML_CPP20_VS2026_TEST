@@ -78,9 +78,6 @@
     <ClCompile Include="code_files\game\Globs.cpp">
       <Filter>code_files\game</Filter>
     </ClCompile>
-    <ClCompile Include="code_files\game\GameState.cpp">
-      <Filter>code_files\game</Filter>
-    </ClCompile>
     <ClCompile Include="code_files\game\Component.cpp">
       <Filter>code_files\game</Filter>
     </ClCompile>
@@ -161,6 +158,18 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\misc\util.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\PlayState.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\SplashState.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\TitleState.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\StateVar.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

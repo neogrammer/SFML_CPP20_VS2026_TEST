@@ -14,8 +14,7 @@ void Game::update(float dt)
 void Game::handleKeyEvent(sf::Keyboard::Key key, bool isPressed)
 {
     // user let go of the escape key
-    if (key == sf::Keyboard::Key::Escape && isPressed == false)
-        mWindow.close();
+
 }
 
 void Game::render()
@@ -64,6 +63,9 @@ void Game::resizeBackground()
 
 bool Game::Initialize()
 {
+    delta = 0.f;
+
+
     mWindow.create(sf::VideoMode({ glb::WW, glb::WH }), "SFML works!");
     mWindow.setFramerateLimit(60);
     if (!ImGui::SFML::Init(mWindow, false)) throw std::runtime_error("Bad ImGui::Init()");
@@ -91,7 +93,7 @@ bool Game::Initialize()
     if (!ImGui::SFML::UpdateFontTexture())  // once
         throw std::runtime_error("UpdateFontTexture failed");
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
-  
+
     testTxt.setCharacterSize(44u);
     testTxt.setFillColor(sf::Color::White);
     testTxt.setOutlineColor(sf::Color::Black);
@@ -101,11 +103,28 @@ bool Game::Initialize()
     util::centerText(testTxt, { glb::WW,glb::WH });
     std::cout << testTxt.getCharacterSize() * testTxt.getString().getSize() << std::endl;
 
-	return true;
+    stateMap[eStateID::Splash] = SplashState{};
+    stateMap[eStateID::Title] = TitleState{};
+    stateMap[eStateID::Play] = PlayState{};
+
+    currState = &stateMap[eStateID::Splash];
+    std::visit([this](auto& s) {
+        s.enter();
+        }, *currState);
+
+    switchTo = eStateID::None;
+
+
+
+    return true;
 }
 
 void Game::Shutdown()
 {
+    std::visit([this](auto& s) {
+        s.leave();
+        }, *currState);
+
     ImGui::SFML::Shutdown();
 }
 
@@ -125,26 +144,67 @@ void Game::Run()
             }
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
-                handleKeyEvent(keyPressed->code, true);
+                std::visit([&](auto& s) {
+                    s.handleKeyEvent(keyPressed->code, true);
+                    }, *currState);
             }
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyReleased>())
             {
-                handleKeyEvent(keyPressed->code, false);
+                std::visit([&](auto& s) {
+                    s.handleKeyEvent(keyPressed->code, false);
+                    }, *currState);
+
+                if (keyPressed->code == sf::Keyboard::Key::Escape)
+                    mWindow.close();
             }
         }
-        static float delta = 0.f;
         delta += mDeltaClock.restart().asSeconds();
         
+
+
+
         bool repaint = false;
         while (delta >= 0.016667f)
         {
             repaint = true;
             delta -= 0.016667f;
-            update(0.016667f);
+            if (currState) {
+                switchTo = std::visit([this](auto& s) -> eStateID {
+                    return s.update(0.016667f);
+                    }, *currState);
+            }
+            // Check if switching state
+            if (switchTo != eStateID::None && switchTo != eStateID::Count)
+            {
+                if (currState)
+                {
+                    // 's' automatically becomes the active type (e.g., SplashState)
+                    std::visit([this](auto& s) {
+                        s.leave();
+                        }, *currState);
+
+                    currState = &stateMap[switchTo];
+
+                    std::visit([this](auto& s) {
+                        s.enter();
+                        }, *currState);
+                }
+                switchTo = eStateID::None;
+            }
         }
 
+        
+
         if (repaint)
-            render();
+        {
+            mWindow.clear();
+            if (currState) {
+                std::visit([this](auto& s) {
+                    s.render(mWindow);
+                    }, *currState);
+            }
+            mWindow.display();
+        }
     }
 }
 
