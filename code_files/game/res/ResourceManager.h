@@ -17,8 +17,8 @@ struct ResourceManager
     ResourceManager& operator=(const ResourceManager&) = delete;
 
 
-    template<typename ... Args>
-    void load(const IDENTIFIER& id, Args&& ... args);
+    template<typename... Args>
+    void load(const IDENTIFIER& id, Args&&... args);
 
     RESOURCE& get(const IDENTIFIER& id)const;
 
@@ -53,10 +53,11 @@ struct ResourceManager<sf::Font, IDENTIFIER>
     ResourceManager& operator=(const ResourceManager&) = delete;
 
 
+    
     template<typename ... Args>
-    void load(const IDENTIFIER& id, Args&& ... args);
+    void load(const IDENTIFIER& id, Args&&... args);
 
-    sf::Font& get(const IDENTIFIER& id)const;
+    sf::Font& get(const IDENTIFIER& id) const;
 
 private:
     std::unordered_map<IDENTIFIER, std::unique_ptr<sf::Font>> _map;

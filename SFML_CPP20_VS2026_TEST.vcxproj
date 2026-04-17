@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\freetype2.14\include;$(ProjectDir)code_files\third_party\freetype2.14\include;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\glfw\include;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\imgui-sfml;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\SFML3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\freetype2.14\release static\vs2017-2026\x64;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\glfw\libdbug\Debug;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\imgui-sfml\lib\Debug;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\SFML3\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)code_files\third_party\freetype2.14\include;$(ProjectDir)code_files\third_party\glfw\include;$(ProjectDir)code_files\third_party\imgui-sfml;$(ProjectDir)code_files\third_party\SFML3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)code_files\third_party\freetype2.14\release static\vs2017-2026\x64;$(ProjectDir)code_files\third_party\glfw\lib\Debug;$(ProjectDir)code_files\third_party\imgui-sfml\Debug;$(ProjectDir)code_files\third_party\SFML3\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\tools\SFML3\include;$(IncludePath)</IncludePath>
@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>IMGUI_ENABLE_FREETYPE;SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\imgui\misc\freetype;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\imgui-sfml;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\game;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files;C:\Users\jlhar\source\repos\neogrammer\SFML_CPP20_VS2026_TEST\code_files\third_party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)code_files\third_party\imgui\misc\freetype;$(ProjectDir)code_files\third_party\imgui-sfml;$(ProjectDir)code_files\game;$(ProjectDir)code_files;$(ProjectDir)code_files\third_party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -187,6 +187,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="code_files\game\res\tpl\ResourceManager.tpl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\splash_state\BG.png" />
+    <Image Include="assets\textures\splash_state\BG2.png" />
+    <Image Include="assets\textures\splash_state\GreyBG.png" />
+    <Image Include="assets\textures\splash_state\SplashBG_Balls.png" />
+    <Image Include="assets\textures\title_state\TitleBG.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

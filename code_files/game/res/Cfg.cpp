@@ -14,6 +14,10 @@ void Cfg::Initialize()
 
 void Cfg::initTextures()
 {
+    textures.load((int)Textures::SplashBG, "assets/textures/splash_state/GreyBG.png");
+    textures.load((int)Textures::TitleBG, "assets/textures/splash_state/BG.png");
+    textures.load((int)Textures::BallsBG, "assets/textures/splash_state/SplashBG_Balls.png");
+
 }
 
 

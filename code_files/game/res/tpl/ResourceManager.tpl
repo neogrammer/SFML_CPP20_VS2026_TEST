@@ -1,6 +1,6 @@
 #include <stdexcept> //runtime_error
 #include <utility> //forward
-
+#include <SFML/Graphics.hpp>
 
 template<typename RESOURCE,typename IDENTIFIER>
 template<typename ... Args>
@@ -18,15 +18,15 @@ RESOURCE& ResourceManager<RESOURCE,IDENTIFIER>::get(const IDENTIFIER& id)const
     return *_map.at(id);
 }
 
-//sf::Font special case
+//sf::font special case
 template<typename IDENTIFIER>
-template<typename ... Args>
-void ResourceManager<sf::Font,IDENTIFIER>::load(const IDENTIFIER& id,Args&& ... args)
+template <typename... Args>
+void ResourceManager<sf::Font,IDENTIFIER>::load(const IDENTIFIER& id, Args&&... args)
 {
-    std::unique_ptr<sf::Font> ptr(new sf::Font);
+    std::unique_ptr<sf::Font> ptr(new sf::Font(std::forward<Args>(args)...));
 
-    if(not ptr->openFromFile(std::forward<Args>(args)...))
-        throw std::runtime_error("Impossible to load file");
+    if(!ptr)
+        throw std::runtime_error("impossible to load file");
     _map.emplace(id,std::move(ptr));
 };
 

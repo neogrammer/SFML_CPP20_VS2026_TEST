@@ -4,9 +4,16 @@
 #include "../GameState.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
+
+#include <res/Cfg.h>
+
 // A specific implementation
 class SplashState : public GameState<SplashState> {
     eStateID mPendingState{ eStateID::None };
+
+    Cfg::Textures mBGTexID{ Cfg::Textures::SplashBG };
+    Cfg::Textures mBGTexBallsID{ Cfg::Textures::BallsBG };
+
 public:
     eStateID updateImpl(float dt) 
     {
@@ -21,14 +28,27 @@ public:
         return eStateID::None;
     }
 
-    void renderImpl(sf::RenderWindow& window) {
+    void renderImpl(sf::RenderWindow& window) 
+    {
+        auto& tex = Cfg::textures.get((int)mBGTexID);
+
+        sf::Sprite renderSprite{ tex };
+        auto& tex2 = Cfg::textures.get((int)mBGTexBallsID);
+        
+        sf::Sprite renderSprite2{ tex2 };
+        renderSprite2.setPosition({-50.f, 0.f});
+        window.draw(renderSprite);
+        window.draw(renderSprite2);
+
     }
 
-    void enterImpl() {
+    void enterImpl()
+    {
         std::cout << "Entered SplashState" << std::endl;
     }
 
-    void leaveImpl() {
+    void leaveImpl() 
+    {
         std::cout << "Left SplashState" << std::endl;
     }
 
