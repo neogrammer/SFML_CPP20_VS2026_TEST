@@ -37,6 +37,15 @@
     <Filter Include="3rd_party\imgui-sfml">
       <UniqueIdentifier>{0898d388-2845-4b6b-bd6c-d48b7aacdbc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code_files\game\res">
+      <UniqueIdentifier>{f59fb3c6-e718-46c4-b703-3a106dbd992c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\tpl">
+      <UniqueIdentifier>{54f20615-5257-48c0-9100-0f3025c0fbcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\res\tpl">
+      <UniqueIdentifier>{be72cdb0-8194-4f43-97db-14fc6316924e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
@@ -63,7 +72,7 @@
     <ClCompile Include="main.cpp">
       <Filter>code_files\app</Filter>
     </ClCompile>
-    <ClCompile Include="code_files\game\Entity.cpp">
+    <ClCompile Include="code_files\game\GObj.cpp">
       <Filter>code_files\game</Filter>
     </ClCompile>
     <ClCompile Include="code_files\game\Globs.cpp">
@@ -74,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="code_files\game\Component.cpp">
       <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_objects\AnimObj.cpp">
+      <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\res\Cfg.cpp">
+      <Filter>code_files\game\res</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +139,7 @@
     <ClInclude Include="code_files\game\Game.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="code_files\game\Entity.h">
+    <ClInclude Include="code_files\game\GObj.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\Globs.h">
@@ -136,5 +151,22 @@
     <ClInclude Include="code_files\game\GameState.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="code_files\game\game_objects\AnimObj.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\res\Cfg.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\res\ResourceManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\misc\util.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="code_files\game\res\tpl\ResourceManager.tpl">
+      <Filter>Headers\tpl</Filter>
+    </None>
   </ItemGroup>
 </Project>

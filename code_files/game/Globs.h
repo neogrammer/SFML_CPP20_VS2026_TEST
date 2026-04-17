@@ -4,8 +4,8 @@
 #include <utility>
 
 // MACROS
-#define sptent std::shared_ptr<Entity>
-#define uptent std::unique_ptr<Entity>
+#define sptent std::shared_ptr<GObj>
+#define uptent std::unique_ptr<GObj>
 
 
 // Globals
