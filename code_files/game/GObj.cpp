@@ -27,7 +27,7 @@ void GObj::setUniDirectional(bool cond_)
 
 void GObj::setFacingRight(bool cond_)
 {
-    facingRight = cond_;
+    copy->facingRight = cond_;
 }
 
 void GObj::setSize(sf::Vector2f size_)
@@ -266,5 +266,7 @@ void GObj::swapdate()
     this->acceleration = copy->acceleration;
     this->velocity = copy->velocity;
     this->position = copy->position;
+
+    this->setFacingRight(copy->isFacingRight());
 }
 

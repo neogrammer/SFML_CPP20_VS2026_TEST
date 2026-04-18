@@ -841,3 +841,16 @@ void AnimObj::animBfrSwap()
 
 	GObj::setRect(c.getRect());
 }
+
+AnimName AnimObj::getCurrentAnim()
+{
+	return currentAnim;
+}
+
+void AnimObj::setCurrentAnim(AnimName anim)
+{
+	auto& c = *dynamic_cast<AnimObj*>(copy);
+
+	c.currentAnim = anim;
+	c.currentIndex = 0;
+}

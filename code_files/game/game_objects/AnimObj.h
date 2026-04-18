@@ -96,5 +96,8 @@ public:
 	void loadAnimations(const std::string& filename);
 	void animate(float dt);
 	void animBfrSwap();
+	AnimName getCurrentAnim();
+	void setCurrentAnim(AnimName anim);
+
 
 };
