@@ -5,4 +5,9 @@ void PlayState::leaveImpl() {
 
     if (gameObject)
         delete gameObject;
+
+    if (tmap)
+    {
+        tmap.reset();
+    }
 }

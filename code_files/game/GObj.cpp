@@ -53,22 +53,11 @@ void GObj::setAccleration(sf::Vector2f acceleration_)
 
 
 GObj::GObj()
-    : texID{ Cfg::Textures::None }
-    , texRect{ sf::IntRect{{0,0},{32,32}} }
-    , uniDirectional{ false }
-    , position{ 0.f,0.f }
-    , size{ 32.f, 32.f }
-    , offset{ 0.f,0.f }
-    , facingRight{ true }
-{
-    auto check = defaultTex.loadFromFile("Assets/textures/invariant.png");
-    if (!check)
-    {
-        std::cout << "Unable to open invariant into the default texture variable GObj" << std::endl;
-    }
+    : GObj(Cfg::Textures::None, sf::IntRect{ {0,0},{32,32} }, false, { 0.f,0.f }, { 32.f,32.f }, {0.f,0.f}, false)
+{   
 }
 
-GObj::GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_)
+GObj::GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_, bool isCopy)
     : texID{ texID_ }
     , texRect{ texRect_ }
     , uniDirectional{ uniDirectional_ }
@@ -78,6 +67,8 @@ GObj::GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf:
     , facingRight{ true }
 {
 
+    if (!isCopy)
+        copy = new GObj{ texID_, texRect_, uniDirectional_, position_, size_, offset_, true };
 }
 
 GObj::~GObj()

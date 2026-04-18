@@ -196,8 +196,17 @@ void AnimObj::loadAnimation(AnimName nameID_, Cfg::Textures texID_, std::vector<
 AnimObj::AnimObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_, bool isCopy)
 	: GObj{ texID_, texRect_,uniDirectional_, position_, size_, offset_ }
 {
+
 	if (!isCopy)
-		copy = new AnimObj{ texID_, texRect_, uniDirectional_, position_, size_, offset_, true};
+	{
+		if (copy)
+		{
+			delete copy;
+		}
+
+		copy = new AnimObj{ texID_, texRect_, uniDirectional_, position_, size_, offset_, true };
+	}
+
 }
 
 void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_, std::unordered_set<AnimName>& nameID_, AnimName startAnim, std::unordered_map<AnimName, sf::Vector2f>& frameSizes_,

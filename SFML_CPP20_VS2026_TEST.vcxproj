@@ -150,6 +150,7 @@
     <ClCompile Include="code_files\game\GObj.cpp" />
     <ClCompile Include="code_files\game\Game.cpp" />
     <ClCompile Include="code_files\game\Globs.cpp" />
+    <ClCompile Include="code_files\game\map\Tilemap.cpp" />
     <ClCompile Include="code_files\game\res\Cfg.cpp" />
     <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp" />
@@ -186,21 +187,27 @@
     <ClInclude Include="code_files\game\GameState.h" />
     <ClInclude Include="code_files\game\GameStateMgr.h" />
     <ClInclude Include="code_files\game\Globs.h" />
+    <ClInclude Include="code_files\game\map\Tilemap.h" />
     <ClInclude Include="code_files\game\misc\util.h" />
     <ClInclude Include="code_files\game\res\Cfg.h" />
     <ClInclude Include="code_files\game\res\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\anims\player.anm" />
+    <None Include="assets\maps\tilemaps\tilemapJungle1.map" />
+    <None Include="assets\maps\tilesets\tileset_jungle1.tst" />
     <None Include="code_files\game\res\tpl\ResourceManager.tpl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\textures\actors\mmedit.png" />
+    <Image Include="assets\textures\blank_tile.png" />
     <Image Include="assets\textures\invariant.png" />
     <Image Include="assets\textures\splash_state\BG.png" />
     <Image Include="assets\textures\splash_state\BG2.png" />
     <Image Include="assets\textures\splash_state\GreyBG.png" />
     <Image Include="assets\textures\splash_state\SplashBG_Balls.png" />
+    <Image Include="assets\textures\tileset1.png" />
+    <Image Include="assets\textures\tileset128x128.png" />
     <Image Include="assets\textures\title_state\TitleBG.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

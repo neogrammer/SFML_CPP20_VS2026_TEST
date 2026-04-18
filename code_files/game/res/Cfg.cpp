@@ -18,8 +18,8 @@ void Cfg::initTextures()
     textures.load((int)Textures::TitleBG, "assets/textures/splash_state/BG.png");
     textures.load((int)Textures::BallsBG, "assets/textures/splash_state/SplashBG_Balls.png");
     textures.load((int)Textures::PlayerAtlas, "assets/textures/actors/mmedit.png");
-
-
+    textures.load((int)Textures::TilesetJungle1, "assets/textures/tileset1.png");
+    textures.load((int)Textures::BlankTile, "assets/textures/blank_tile.png");
 }
 
 

@@ -65,7 +65,7 @@ public:
 		
 public:
 	GObj();
-	GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_ = false, sf::Vector2f position_ = { 0.f,0.f }, sf::Vector2f size_ = { 0.f,0.f }, sf::Vector2f offset_ = { 0.f,0.f });
+	GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_ = false, sf::Vector2f position_ = { 0.f,0.f }, sf::Vector2f size_ = { 0.f,0.f }, sf::Vector2f offset_ = { 0.f,0.f }, bool isCopy = false);
 	~GObj();
 	GObj(const GObj&);
 	GObj& operator=(const GObj&);

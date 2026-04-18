@@ -5,8 +5,13 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <game/game_objects/AnimObj.h>
 #include <iostream>
+#include "../../game/map/Tilemap.h"
+#include <memory>
+
 // A specific implementation
 class PlayState : public GameState<PlayState> {
+
+    std::unique_ptr<Tilemap> tmap{};
 
     eStateID mPendingState{ eStateID::None };
     GObj* gameObject{ nullptr };

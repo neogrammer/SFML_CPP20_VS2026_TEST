@@ -87,6 +87,24 @@
     <ClCompile Include="code_files\game\res\Cfg.cpp">
       <Filter>code_files\game\res</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_leave.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_render.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_update.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\map\Tilemap.cpp">
+      <Filter>code_files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -172,10 +190,48 @@
     <ClInclude Include="code_files\game\game_state\StateVar.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="code_files\game\map\Tilemap.h">
+      <Filter>3rd_party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code_files\game\res\tpl\ResourceManager.tpl">
       <Filter>Headers\tpl</Filter>
     </None>
+    <None Include="assets\anims\player.anm" />
+    <None Include="assets\maps\tilemaps\tilemapJungle1.map" />
+    <None Include="assets\maps\tilesets\tileset_jungle1.tst" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\actors\mmedit.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\blank_tile.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\invariant.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\BG.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\BG2.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\GreyBG.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\SplashBG_Balls.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\tileset128x128.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\title_state\TitleBG.png">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="assets\textures\tileset1.png">
+      <Filter>assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>
