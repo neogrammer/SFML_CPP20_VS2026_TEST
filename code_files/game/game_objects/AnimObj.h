@@ -94,5 +94,7 @@ public:
 	virtual void update(float dt_) override;
 	virtual void swapdate() override;
 	void loadAnimations(const std::string& filename);
+	void animate(float dt);
+	void animBfrSwap();
 
 };

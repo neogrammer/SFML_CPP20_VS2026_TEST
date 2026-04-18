@@ -5,44 +5,47 @@
 
 void AnimObj::setBase()
 {
-	if (!anims.contains(currentAnim))
+	auto& c = *dynamic_cast<AnimObj*>(copy);
+
+	if (!c.anims.contains(c.currentAnim))
 	{
 		std::cout << "Current Animation is not in the set for this entity" << std::endl;
 		return;
 	}
 
 
-	int currDir = (this->isFacingRight()) ? 0 : 1;
-	if (currentIndex < 0 || currentIndex >= frames[currentAnim].at(currDir).size())
+	int currDir = (c.isFacingRight()) ? 0 : 1;
+	if (c.currentIndex < 0 || c.currentIndex >= c.frames[c.currentAnim].at(currDir).size())
 	{
 		std::cout << "Current Index out of range in current animation" << std::endl;
 		return;
 	}
 
-	AnimObj* c = dynamic_cast<AnimObj*>(copy);
 
-	setOffset(c->offsets[dynamic_cast<AnimObj*>(copy)->currentAnim][currDir][c->currentIndex]);
-	setSize(c->sizes[dynamic_cast<AnimObj*>(copy)->currentAnim][currDir][c->currentIndex]);
+	setOffset(c.offsets[c.currentAnim][currDir][c.currentIndex]);
+	setSize(c.sizes[c.currentAnim][currDir][c.currentIndex]);
+	
 }
 
 void AnimObj::setCopyBase()
 {
-	if (!anims.contains(currentAnim))
+	auto& c = *dynamic_cast<AnimObj*>(copy);
+	if (!c.anims.contains(c.currentAnim))
 	{
 		std::cout << "Current Animation is not in the set for this entity" << std::endl;
 		return;
 	}
 
 
-	int currDir = (this->isFacingRight()) ? 0 : 1;
-	if (currentIndex < 0 || currentIndex >= frames[currentAnim].at(currDir).size())
+	int currDir = (c.isFacingRight()) ? 0 : 1;
+	if (c.currentIndex < 0 || c.currentIndex >= c.frames[c.currentAnim].at(currDir).size())
 	{
 		std::cout << "Current Index out of range in current animation" << std::endl;
 		return;
 	}
-
-	copy->setOffset(offsets[currentAnim][currDir][currentIndex]);
-	copy->setSize(sizes[currentAnim][currDir][currentIndex]);
+	
+	copy->setOffset(offsets[c.currentAnim][currDir][c.currentIndex]);
+	copy->setSize(sizes[c.currentAnim][currDir][c.currentIndex]);
 }
 
 AnimObj::AnimObj(const std::string& filename)
@@ -548,7 +551,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			delays.at(aname).back().clear();
 			delays.at(aname).back().reserve(delay.size());
 			for (int j = 0; j < delay.size(); j++)
-				delays.at(aname)[0].emplace_back(delay[j]);
+				delays.at(aname)[0].emplace_back(delay[j] / 1000.f);
 		}
 		else
 		{
@@ -560,9 +563,9 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			delays.at(aname)[1].clear();
 			delays.at(aname)[1].reserve(delay.size() / 2);
 			for (int j = 0; j < delay.size() / 2; j++)
-				delays.at(aname)[0].emplace_back(delay[j]);
+				delays.at(aname)[0].emplace_back(delay[j] / 1000.f);
 			for (int j = (int)delay.size() / 2; j < (int)delay.size(); j++)
-				delays.at(aname)[1].emplace_back(delay[j]);
+				delays.at(aname)[1].emplace_back(delay[j] / 1000.f);
 		}
 
 		other->delays[aname] = std::vector<std::vector<float>>{};
@@ -575,7 +578,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			other->delays.at(aname).back().clear();
 			other->delays.at(aname).back().reserve(delay.size());
 			for (int j = 0; j < delay.size(); j++)
-				other->delays.at(aname)[0].emplace_back(delay[j]);
+				other->delays.at(aname)[0].emplace_back(delay[j] / 1000.f);
 		}
 		else
 		{
@@ -587,9 +590,9 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			other->delays.at(aname)[1].clear();
 			other->delays.at(aname)[1].reserve(delay.size() / 2);
 			for (int j = 0; j < delay.size() / 2; j++)
-				other->delays.at(aname)[0].emplace_back(delay[j]);
+				other->delays.at(aname)[0].emplace_back(delay[j] / 1000.f);
 			for (int j = (int)delay.size() / 2; j < (int)delay.size(); j++)
-				other->delays.at(aname)[1].emplace_back(delay[j]);
+				other->delays.at(aname)[1].emplace_back(delay[j] / 1000.f);
 		}
 
 
@@ -630,15 +633,17 @@ void AnimObj::update(float dt_)
 		throw std::runtime_error("anim obj copy not good!");
 	}
 
-	setCopyBase();
-
+	// in this order double buffer
 	GObj::update(dt_);
+	animate(dt_);
+	setCopyBase();
 }
 
 void AnimObj::swapdate()
 {
-	setBase();
+	animBfrSwap();
 	GObj::swapdate();
+	setBase();
 }
 
 // Assumes: AnimName and TextureID are enums (or constructible from int)
@@ -793,4 +798,46 @@ void AnimObj::loadAnimations(const std::string& filename)
 		loopDelays,
 		loopings
 	);
+
+	currentAnim = AnimName::Idle;
+	setCopyBase();
+	setBase();
+}
+
+void AnimObj::animate(float dt)
+{
+	auto& c = *dynamic_cast<AnimObj*>(copy);
+	c.animElapsed += dt;
+	int currDir = (c.isFacingRight()) ? 0 : 1;
+	if (c.currentIndex < 0 || c.currentIndex >= frames[c.currentAnim].at(currDir).size())
+	{
+		std::cout << "Current Index out of range in current animation" << std::endl;
+		return;
+	}
+	if (c.animElapsed >= delays[c.currentAnim][currDir][c.currentIndex])
+	{
+
+		c.animElapsed = 0.f;
+		c.currentIndex++;
+		if (c.currentIndex >= frames[c.currentAnim].at(currDir).size())
+		{
+			c.currentIndex = 0;
+		}
+	}
+
+	GObj::setRectCpy(c.frames[c.currentAnim].at(currDir).at(c.currentIndex));
+
+}
+
+void AnimObj::animBfrSwap()
+{
+	auto& c = *dynamic_cast<AnimObj*>(copy);
+	
+	loopElapsed = c.loopElapsed;
+	playing = c.playing;;
+	animElapsed = c.animElapsed;
+	currentIndex = c.currentIndex;
+	currentAnim = c.currentAnim;
+
+	GObj::setRect(c.getRect());
 }

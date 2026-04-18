@@ -30,6 +30,7 @@ public:
 	void setFacingRight(bool cond_);
 	void setSize(sf::Vector2f);
 	void setOffset(sf::Vector2f);
+	sf::IntRect getRect();
 	void setRect(sf::IntRect rect_);
 	void setID(Cfg::Textures texID_);
 	void setAccleration(sf::Vector2f offset_);

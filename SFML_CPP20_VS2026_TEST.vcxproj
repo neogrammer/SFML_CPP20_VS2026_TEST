@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)code_files\third_party\freetype2.14\include;$(ProjectDir)code_files\third_party\glfw\include;$(ProjectDir)code_files\third_party\imgui-sfml;$(ProjectDir)code_files\third_party\SFML3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)code_files\third_party\freetype2.14\release static\vs2017-2026\x64;$(ProjectDir)code_files\third_party\glfw\lib\Debug;$(ProjectDir)code_files\third_party\imgui-sfml\Debug;$(ProjectDir)code_files\third_party\SFML3\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)code_files\third_party\freetype2.14\release static\vs2017-2026\x64;$(ProjectDir)code_files\third_party\glfw\libdbug\Debug;$(ProjectDir)code_files\third_party\imgui-sfml\lib\Debug;$(ProjectDir)code_files\third_party\SFML3\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\tools\SFML3\include;$(IncludePath)</IncludePath>

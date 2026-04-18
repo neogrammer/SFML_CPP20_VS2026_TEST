@@ -40,6 +40,11 @@ void GObj::setOffset(sf::Vector2f offset_)
     offset = offset_;
 }
 
+sf::IntRect GObj::getRect()
+{
+    return texRect;
+}
+
 void GObj::setAccleration(sf::Vector2f acceleration_)
 {
     acceleration = acceleration_;
@@ -238,16 +243,22 @@ void GObj::update(float dt_)
     if (copy == nullptr)
     {
         std::cout << "gobj copy not good!" << std::endl;
-        std::runtime_error("gobj copy not good!");
+        auto err = std::runtime_error(R"(gobj copy not good!)");
+        throw err;
     }
-
+    if (copy)
+    {
     // friction
-    if (this->velocity.x > 0.f) copy->velocity.x = copy->velocity.x - 0.009f;
-    if (this->velocity.x < 0.f) copy->velocity.x = copy->velocity.x + 0.009f;
+    if (this->velocity.x > 0.f) 
+        copy->velocity.x = this->velocity.x - 0.009f;
+    if (this->velocity.x < 0.f) 
+        copy->velocity.x = this->velocity.x + 0.009f;
 
-    copy->velocity = copy->velocity + copy->acceleration;
-    copy->position = this->position + copy->velocity * dt_;
-    copy->acceleration = { 0.f,0.f };
+    
+        copy->velocity = this->velocity + this->acceleration;
+        copy->position = this->position + copy->velocity * dt_;
+        copy->acceleration = { 0.f,0.f };
+    }
 }
 
 void GObj::swapdate()
