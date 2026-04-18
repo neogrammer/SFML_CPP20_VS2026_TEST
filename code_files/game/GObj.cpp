@@ -1,6 +1,6 @@
 #include "GObj.h"
 #include <iostream>
-sf::Texture GObj::defaultTex = sf::Texture{};
+sf::Texture GObj::defaultTex = sf::Texture{"assets/textures/invariant.png"};
 
 
 void GObj::addComponent(std::shared_ptr<Component> component)
@@ -45,6 +45,8 @@ void GObj::setAccleration(sf::Vector2f acceleration_)
     acceleration = acceleration_;
 }
 
+
+
 GObj::GObj()
     : texID{ Cfg::Textures::None }
     , texRect{ sf::IntRect{{0,0},{32,32}} }
@@ -70,15 +72,13 @@ GObj::GObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf:
     , offset{ offset_ }
     , facingRight{ true }
 {
-    auto check = defaultTex.loadFromFile("Assets/textures/invariant.png");
-    if (!check)
-    {
-        std::cout << "Unable to open invariant into the default texture variable GObj" << std::endl;
-    }
+
 }
 
 GObj::~GObj()
 {
+    if (copy)
+        delete copy;
 }
 
 GObj::GObj(const GObj& o)
@@ -140,6 +140,51 @@ void GObj::setVel(sf::Vector2f vel_)
     velocity = vel_;
 }
 
+void GObj::setUniDirectionalCpy(bool cond_)
+{
+    copy->setUniDirectional(cond_);
+}
+
+void GObj::setFacingRightCpy(bool cond_)
+{
+    copy->setFacingRight(cond_);
+}
+
+void GObj::setSizeCpy(sf::Vector2f size)
+{
+    copy->setSize(size);
+}
+
+void GObj::setOffsetCpy(sf::Vector2f off)
+{
+    copy->setOffset(off);
+}
+
+void GObj::setRectCpy(sf::IntRect rect_)
+{
+    copy->setRect(rect_);
+}
+
+void GObj::setIDCpy(Cfg::Textures texID_)
+{
+    copy->setID(texID_);
+}
+
+void GObj::setAcclerationCpy(sf::Vector2f offset_)
+{
+    copy->setAccleration(offset_);
+}
+
+void GObj::setPosCpy(sf::Vector2f pos_)
+{
+    copy->setPos(pos_);
+}
+
+void GObj::setVelCpy(sf::Vector2f vel_)
+{
+    copy->setVel(vel_);
+}
+
 sf::Vector2f GObj::getVel()
 {
     return velocity;
@@ -188,13 +233,27 @@ std::unique_ptr<sf::Sprite> GObj::sprite()
 
 }
 
-void GObj::update(float dt_, sf::RenderWindow& wnd_)
+void GObj::update(float dt_)
 {
-    // friction
-    if (velocity.x > 0.f) velocity.x -= 0.009f;
-    if (velocity.x < 0.f) velocity.x += 0.009f;
+    if (copy == nullptr)
+    {
+        std::cout << "gobj copy not good!" << std::endl;
+        std::runtime_error("gobj copy not good!");
+    }
 
-    velocity += acceleration;
-    position += velocity * dt_;
-    acceleration = { 0.f,0.f };
+    // friction
+    if (this->velocity.x > 0.f) copy->velocity.x = copy->velocity.x - 0.009f;
+    if (this->velocity.x < 0.f) copy->velocity.x = copy->velocity.x + 0.009f;
+
+    copy->velocity = copy->velocity + copy->acceleration;
+    copy->position = this->position + copy->velocity * dt_;
+    copy->acceleration = { 0.f,0.f };
 }
+
+void GObj::swapdate()
+{
+    this->acceleration = copy->acceleration;
+    this->velocity = copy->velocity;
+    this->position = copy->position;
+}
+

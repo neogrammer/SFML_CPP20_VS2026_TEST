@@ -3,38 +3,22 @@
 
 #include "../GameState.h"
 #include <SFML/Window/Keyboard.hpp>
-
+#include <game/game_objects/AnimObj.h>
 #include <iostream>
 // A specific implementation
 class PlayState : public GameState<PlayState> {
+
     eStateID mPendingState{ eStateID::None };
-
+    GObj* gameObject{ nullptr };
 public:
-    eStateID updateImpl(float dt) 
-    {
-        if (mPendingState != eStateID::None && mPendingState != eStateID::Count)
-        {
-            eStateID tmpState = mPendingState;
-            mPendingState = eStateID::None;
-            return tmpState;
-        }
-        return eStateID::None;
-    }
 
-    void renderImpl(sf::RenderWindow& window) {
-    }
+    eStateID updateImpl(float dt);
+    void renderImpl(sf::RenderWindow& window); 
+    void handleKeyEventInputImpl(sf::Keyboard::Key key, bool isPressed);
 
-    void enterImpl() {
-        std::cout << "Entered PlayState" << std::endl;
-    }
+    void enterImpl();
+    void leaveImpl();
 
-    void leaveImpl() {
-        std::cout << "Left PlayState" << std::endl;
-    }
-
-    void handleKeyEventInputImpl(sf::Keyboard::Key key, bool isPressed) {
-
-    }
 
 };
 #endif

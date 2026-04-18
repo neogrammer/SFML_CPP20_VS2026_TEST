@@ -19,8 +19,30 @@ void AnimObj::setBase()
 		return;
 	}
 
-	setOffset(offsets[currentAnim][currDir][currentIndex]);
-	setSize(sizes[currentAnim][currDir][currentIndex]);
+	AnimObj* c = dynamic_cast<AnimObj*>(copy);
+
+	setOffset(c->offsets[dynamic_cast<AnimObj*>(copy)->currentAnim][currDir][c->currentIndex]);
+	setSize(c->sizes[dynamic_cast<AnimObj*>(copy)->currentAnim][currDir][c->currentIndex]);
+}
+
+void AnimObj::setCopyBase()
+{
+	if (!anims.contains(currentAnim))
+	{
+		std::cout << "Current Animation is not in the set for this entity" << std::endl;
+		return;
+	}
+
+
+	int currDir = (this->isFacingRight()) ? 0 : 1;
+	if (currentIndex < 0 || currentIndex >= frames[currentAnim].at(currDir).size())
+	{
+		std::cout << "Current Index out of range in current animation" << std::endl;
+		return;
+	}
+
+	copy->setOffset(offsets[currentAnim][currDir][currentIndex]);
+	copy->setSize(sizes[currentAnim][currDir][currentIndex]);
 }
 
 AnimObj::AnimObj(const std::string& filename)
@@ -168,10 +190,11 @@ void AnimObj::loadAnimation(AnimName nameID_, Cfg::Textures texID_, std::vector<
 
 }
 
-AnimObj::AnimObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_)
+AnimObj::AnimObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_, bool isCopy)
 	: GObj{ texID_, texRect_,uniDirectional_, position_, size_, offset_ }
 {
-
+	if (!isCopy)
+		copy = new AnimObj{ texID_, texRect_, uniDirectional_, position_, size_, offset_, true};
 }
 
 void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_, std::unordered_set<AnimName>& nameID_, AnimName startAnim, std::unordered_map<AnimName, sf::Vector2f>& frameSizes_,
@@ -185,6 +208,15 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 	currentIndex = 0;
 	loopElapsed = 0.f;
 	playing = true;
+
+	AnimObj* other = dynamic_cast<AnimObj*>(copy);
+
+	other->animElapsed = 0.f;
+	other->currentAnim = AnimName::None;
+	other->currentIndex = 0;
+	other->loopElapsed = 0.f;
+	other->playing = true;
+
 
 	for (auto& aname : nameID_)
 	{
@@ -204,7 +236,11 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 		looping[aname] = lp;
 
 
-
+		other->anims.emplace(aname);
+		other->texIDs[aname] = tID;
+		other->loopDelays[aname] = ld;
+		other->loopWaits[aname] = lw;
+		other->looping[aname] = lp;
 
 		// major params
 
@@ -235,6 +271,35 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			for (int j = (int)(off.size() / 2); j < (int)(off.size()); j++)
 				offsets.at(aname)[1].emplace_back(off[j]);
 		}
+
+
+		other->offsets[aname] = std::vector<std::vector<sf::Vector2f>>{};
+		other->offsets.at(aname).clear();
+		
+		if (uni)
+		{
+			other->offsets.at(aname).reserve(1);
+			other->offsets.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->offsets.at(aname).back().clear();
+			other->offsets.at(aname).back().reserve(off.size());
+			for (int j = 0; j < off.size(); j++)
+				other->offsets.at(aname)[0].emplace_back(off[j]);
+		}
+		else
+		{
+			other->offsets.at(aname).reserve(2);
+			other->offsets.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->offsets.at(aname)[0].clear();
+			other->offsets.at(aname)[0].reserve(off.size() / 2);
+			other->offsets.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->offsets.at(aname)[1].clear();
+			other->offsets.at(aname)[1].reserve(off.size() / 2);
+			for (int j = 0; j < (int)(off.size() / 2); j++)
+				other->offsets.at(aname)[0].emplace_back(off[j]);
+			for (int j = (int)(off.size() / 2); j < (int)(off.size()); j++)
+				other->offsets.at(aname)[1].emplace_back(off[j]);
+		}
+
 
 		// Texture IntRects
 		// startPxl is where to start for that animation in the texture in the minimum top left of both x and y, then startCol is the start column of the mini sheet,
@@ -285,6 +350,33 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 					}
 				}
 			}
+
+			other->frames[aname] = std::vector<std::vector<sf::IntRect>>{};
+			auto& frameCpy = other->frames.at(aname);
+			frameCpy.clear();
+			frameCpy.reserve(1);
+			frameCpy.emplace_back(std::vector<sf::IntRect>{});
+			frameCpy[0].clear();
+			frameCpy[0].reserve(off.size());
+			uint32_t counterCpy = 0Ui32;
+			for (int k = 0; k < (int)off.size() && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			{
+
+				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				counterCpy++;
+			}
+			if (counterCpy < numFrames)
+			{
+				for (uint32_t z = 1; z < numRows; z++)
+				{
+					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
+					{
+						frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						counterCpy++;
+					}
+				}
+			}
+
 		}
 		else
 		{
@@ -334,6 +426,52 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				}
 			}
 
+
+			other->frames[aname] = std::vector<std::vector<sf::IntRect>>{};
+			auto& frameCpy = other->frames.at(aname);
+			frameCpy.clear();
+			frameCpy.reserve(2);
+			frameCpy.emplace_back(std::vector<sf::IntRect>{});
+			frameCpy[0].clear();
+			frameCpy[0].reserve(off.size() / 2);
+			frameCpy.emplace_back(std::vector<sf::IntRect>{});
+			frameCpy[1].clear();
+			frameCpy[1].reserve(off.size() / 2);
+			uint32_t counterCpy = 0Ui32;
+			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			{
+				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				counterCpy++;
+			}
+			if (counterCpy < numFrames)
+			{
+				for (uint32_t z = 1; z < numRows; z++)
+				{
+					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
+					{
+						frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						counterCpy++;
+					}
+				}
+			}
+			counterCpy = 0Ui32;
+			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxlLeft.x < stPxlLeft.x + (pitch * frWidth); k++)
+			{
+				frameCpy[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k + stCol) * frWidth),(int)stPxlLeft.y}, {(int)frWidth,(int)frHeight} });
+				counterCpy++;
+			}
+			if (counterCpy < numFrames)
+			{
+				for (uint32_t z = 1; z < numRows; z++)
+				{
+					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
+					{
+						frameCpy[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k * frWidth)),(int)(stPxlLeft.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						counterCpy++;
+					}
+				}
+			}
+
 		}
 
 
@@ -367,6 +505,35 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			for (int j = (int)size.size() / 2; j < (int)size.size(); j++)
 				sizes.at(aname)[1].emplace_back(size[j]);
 		}
+
+		other->sizes[aname] = std::vector<std::vector<sf::Vector2f>>{};
+		other->sizes.at(aname).clear();
+
+		if (uni)
+		{
+			other->sizes.at(aname).reserve(1);
+			other->sizes.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->sizes.at(aname).back().clear();
+			other->sizes.at(aname).back().reserve(size.size());
+			for (int j = 0; j < size.size(); j++)
+				other->sizes.at(aname)[0].emplace_back(size[j]);
+		}
+		else
+		{
+			other->sizes.at(aname).reserve(2);
+			other->sizes.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->sizes.at(aname)[0].clear();
+			other->sizes.at(aname)[0].reserve(size.size() / 2);
+			other->sizes.at(aname).emplace_back(std::vector<sf::Vector2f>{});
+			other->sizes.at(aname)[1].clear();
+			other->sizes.at(aname)[1].reserve(size.size() / 2);
+			for (int j = 0; j < size.size() / 2; j++)
+				other->sizes.at(aname)[0].emplace_back(size[j]);
+			for (int j = (int)size.size() / 2; j < (int)size.size(); j++)
+				other->sizes.at(aname)[1].emplace_back(size[j]);
+		}
+
+
 		// End of Gameplay Sizes
 
 		//  Animation Frame Delays
@@ -397,6 +564,35 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			for (int j = (int)delay.size() / 2; j < (int)delay.size(); j++)
 				delays.at(aname)[1].emplace_back(delay[j]);
 		}
+
+		other->delays[aname] = std::vector<std::vector<float>>{};
+		other->delays.at(aname).clear();
+
+		if (uni)
+		{
+			other->delays.at(aname).reserve(1);
+			other->delays.at(aname).emplace_back(std::vector<float>{});
+			other->delays.at(aname).back().clear();
+			other->delays.at(aname).back().reserve(delay.size());
+			for (int j = 0; j < delay.size(); j++)
+				other->delays.at(aname)[0].emplace_back(delay[j]);
+		}
+		else
+		{
+			other->delays.at(aname).reserve(2);
+			other->delays.at(aname).emplace_back(std::vector < float > {});
+			other->delays.at(aname)[0].clear();
+			other->delays.at(aname)[0].reserve(delay.size() / 2);
+			other->delays.at(aname).emplace_back(std::vector<float>{});
+			other->delays.at(aname)[1].clear();
+			other->delays.at(aname)[1].reserve(delay.size() / 2);
+			for (int j = 0; j < delay.size() / 2; j++)
+				other->delays.at(aname)[0].emplace_back(delay[j]);
+			for (int j = (int)delay.size() / 2; j < (int)delay.size(); j++)
+				other->delays.at(aname)[1].emplace_back(delay[j]);
+		}
+
+
 		// End of Animation Frame Delays
 	}
 	if (!nameID_.contains(startAnim))
@@ -405,9 +601,11 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 		return;
 	}
 	currentAnim = startAnim;
+	other->currentAnim = startAnim;
 	setUniDirectional(uniDirectionals_.at(startAnim));
+	other->setUniDirectional(uniDirectionals_.at(startAnim));
+	setCopyBase();
 	setBase();
-
 }
 
 
@@ -422,11 +620,25 @@ sf::IntRect AnimObj::getCurrentFrame()
 	return frames.at(currentAnim).at(currDir).at(currentIndex);
 }
 
-void AnimObj::update(float dt_, sf::RenderWindow& wnd_)
+void AnimObj::update(float dt_)
+{
+	
+
+	if (copy == nullptr)
+	{
+		std::cout << "anim obj copy not good!" << std::endl;
+		throw std::runtime_error("anim obj copy not good!");
+	}
+
+	setCopyBase();
+
+	GObj::update(dt_);
+}
+
+void AnimObj::swapdate()
 {
 	setBase();
-
-	GObj::update(dt_, wnd_);
+	GObj::swapdate();
 }
 
 // Assumes: AnimName and TextureID are enums (or constructible from int)
@@ -470,6 +682,11 @@ void AnimObj::loadAnimations(const std::string& filename)
 	// 4) read each anim block
 	for (int i = 0; i < animCount; ++i)
 	{
+		if (i == 14)
+		{
+			int h = 0;
+		}
+
 		// 4.1 header
 		int animNameInt = 0;
 		int texIdInt = 0;
@@ -549,6 +766,10 @@ void AnimObj::loadAnimations(const std::string& filename)
 			float d = 0.f;
 			in >> d;
 			delays[aname].push_back(d);
+		}
+		if (i == 27)
+		{
+			int h = 0;
 		}
 	}
 

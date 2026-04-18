@@ -142,6 +142,11 @@
   <ItemGroup>
     <ClCompile Include="code_files\game\Component.cpp" />
     <ClCompile Include="code_files\game\game_objects\AnimObj.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_leave.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_render.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_update.cpp" />
     <ClCompile Include="code_files\game\GObj.cpp" />
     <ClCompile Include="code_files\game\Game.cpp" />
     <ClCompile Include="code_files\game\Globs.cpp" />
@@ -186,9 +191,12 @@
     <ClInclude Include="code_files\game\res\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\anims\player.anm" />
     <None Include="code_files\game\res\tpl\ResourceManager.tpl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\textures\actors\mmedit.png" />
+    <Image Include="assets\textures\invariant.png" />
     <Image Include="assets\textures\splash_state\BG.png" />
     <Image Include="assets\textures\splash_state\BG2.png" />
     <Image Include="assets\textures\splash_state\GreyBG.png" />

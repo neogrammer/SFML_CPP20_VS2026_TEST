@@ -22,6 +22,8 @@ protected:
 	bool facingRight{ true };
 	bool uniDirectional;
 	static sf::Texture defaultTex;
+	
+
 public:
 
 	void setUniDirectional(bool cond_);
@@ -33,14 +35,31 @@ public:
 	void setAccleration(sf::Vector2f offset_);
 	void setPos(sf::Vector2f pos_);
 	void setVel(sf::Vector2f vel_);
+	void setUniDirectionalCpy(bool cond_);
+	void setFacingRightCpy(bool cond_);
+	void setSizeCpy(sf::Vector2f);
+	void setOffsetCpy(sf::Vector2f);
+	void setRectCpy(sf::IntRect rect_);
+	void setIDCpy(Cfg::Textures texID_);
+	void setAcclerationCpy(sf::Vector2f offset_);
+	void setPosCpy(sf::Vector2f pos_);
+	void setVelCpy(sf::Vector2f vel_);
 	sf::Vector2f getVel();
 	void move(sf::Vector2f amt_);
 	std::vector<std::shared_ptr<Component>> mComponents;
 
+	GObj* copy{ nullptr };
+
+
+
+
 public:
 	void addComponent(std::shared_ptr<Component> component);
 	template <typename T>
-	std::shared_ptr<T> getComponent();
+	std::shared_ptr<T> getComponent()
+	{
+		return std::get<0>(mComponents);
+	}
 
 		
 public:
@@ -60,14 +79,9 @@ public:
 	Cfg::Textures getTexID();
 
 	std::unique_ptr<sf::Sprite> sprite();
-	virtual void update(float dt_, sf::RenderWindow& wnd_);
+	virtual void update(float dt_);
+	virtual void swapdate();
 };
 
 
 #endif
-
-template<typename T>
-inline std::shared_ptr<T> GObj::getComponent()
-{
-	return std::get<0>(mComponents);
-}
