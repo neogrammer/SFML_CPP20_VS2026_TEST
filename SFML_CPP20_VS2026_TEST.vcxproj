@@ -144,6 +144,7 @@
     <ClCompile Include="code_files\game\game_objects\AnimObj.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp" />
+    <ClCompile Include="code_files\game\game_state\PlayState_handleStaticInput.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_leave.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_render.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_update.cpp" />
@@ -185,7 +186,6 @@
     <ClInclude Include="code_files\game\GObj.h" />
     <ClInclude Include="code_files\game\Game.h" />
     <ClInclude Include="code_files\game\GameState.h" />
-    <ClInclude Include="code_files\game\GameStateMgr.h" />
     <ClInclude Include="code_files\game\Globs.h" />
     <ClInclude Include="code_files\game\map\Tilemap.h" />
     <ClInclude Include="code_files\game\misc\util.h" />

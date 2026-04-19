@@ -130,6 +130,12 @@ void Game::Shutdown()
 
 void Game::Run()
 {
+    sf::Clock secondaryClock;
+    float secondaryTime{ 0.f };
+    sf::Clock finalClock;
+
+    secondaryClock.restart();
+    finalClock.restart();
     while (mWindow.isOpen())
     {
 
@@ -159,11 +165,12 @@ void Game::Run()
             }
         }
         delta += mDeltaClock.restart().asSeconds();
-        
+
 
 
 
         bool repaint = false;
+        secondaryClock.restart();
         while (delta >= 0.016667f)
         {
             repaint = true;
@@ -173,24 +180,43 @@ void Game::Run()
                     return s.update(0.016667f);
                     }, *currState);
             }
-            // Check if switching state
-            if (switchTo != eStateID::None && switchTo != eStateID::Count)
-            {
-                if (currState)
+            if (switchTo != eStateID::None) break;
+        }
+
+        if (repaint && switchTo == eStateID::None)
+        {
+            if (currState) {
+                secondaryTime = secondaryClock.getElapsedTime().asSeconds();
+                finalClock.restart();
+                while (secondaryTime > 0.016667f)
                 {
-                    // 's' automatically becomes the active type (e.g., SplashState)
-                    std::visit([this](auto& s) {
-                        s.leave();
-                        }, *currState);
-
-                    currState = &stateMap[switchTo];
-
-                    std::visit([this](auto& s) {
-                        s.enter();
-                        }, *currState);
+                    secondaryTime -= 0.016667f;
                 }
-                switchTo = eStateID::None;
+
+                switchTo = std::visit([this, secondaryTime](auto& s) -> eStateID {
+                    return s.update(delta + secondaryTime);
+                    }, *currState);
+                delta = std::clamp(finalClock.getElapsedTime().asSeconds(), 0.f, 0.016667f);
             }
+        }
+
+        // Check if switching state
+        if (switchTo != eStateID::None && switchTo != eStateID::Count)
+        {
+            if (currState)
+            {
+                // 's' automatically becomes the active type (e.g., SplashState)
+                std::visit([this](auto& s) {
+                    s.leave();
+                    }, *currState);
+
+                currState = &stateMap[switchTo];
+
+                std::visit([this](auto& s) {
+                    s.enter();
+                    }, *currState);
+            }
+            switchTo = eStateID::None;
         }
 
         

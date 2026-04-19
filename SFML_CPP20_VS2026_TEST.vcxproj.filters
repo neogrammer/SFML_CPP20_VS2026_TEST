@@ -46,6 +46,9 @@
     <Filter Include="code_files\game\res\tpl">
       <UniqueIdentifier>{be72cdb0-8194-4f43-97db-14fc6316924e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code_files\PlayState">
+      <UniqueIdentifier>{3a46d646-ad89-401e-a60f-6d257b601d7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
@@ -87,23 +90,26 @@
     <ClCompile Include="code_files\game\res\Cfg.cpp">
       <Filter>code_files\game\res</Filter>
     </ClCompile>
-    <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\game_state\PlayState_leave.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\game_state\PlayState_render.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
-    <ClCompile Include="code_files\game\game_state\PlayState_update.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
     <ClCompile Include="code_files\game\map\Tilemap.cpp">
       <Filter>code_files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_handleStaticInput.cpp">
+      <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp">
+      <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp">
+      <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_leave.cpp">
+      <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_render.cpp">
+      <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_state\PlayState_update.cpp">
+      <Filter>code_files\PlayState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +164,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\Globs.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\GameStateMgr.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\GameState.h">

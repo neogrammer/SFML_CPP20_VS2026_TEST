@@ -1,6 +1,7 @@
 #ifndef __GAMESTATE_H___
 #define __GAMESTATE_H___
 #include <SFML/Graphics.hpp>
+#include <game/GObj.h>
 
 enum class eStateID
 {
@@ -39,6 +40,10 @@ public:
 
     void handleKeyEvent(sf::Keyboard::Key key, bool isPressed) {
         static_cast<Derived*>(this)->handleKeyEventInputImpl(key, isPressed);
+    }
+
+    void handleStaticInput(float dt, GObj* gameObject) {
+        static_cast<Derived*>(this->handleStaticInputImpl(dt, gameObject));
     }
 
 };

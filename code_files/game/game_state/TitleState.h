@@ -69,6 +69,11 @@ public:
         }
     }
 
+    void handleStaticInputImpl(float dt, GObj* gameObject)
+    {
+
+    }
+
 };
 
 #endif

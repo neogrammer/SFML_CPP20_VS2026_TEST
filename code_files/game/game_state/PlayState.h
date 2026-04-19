@@ -20,7 +20,7 @@ public:
     eStateID updateImpl(float dt);
     void renderImpl(sf::RenderWindow& window); 
     void handleKeyEventInputImpl(sf::Keyboard::Key key, bool isPressed);
-
+    void handleStaticInputImpl(float dt, GObj* gameObject);
     void enterImpl();
     void leaveImpl();
 

@@ -58,6 +58,11 @@ public:
             mPendingState = eStateID::Title;
         }
     }
+
+    void handleStaticInputImpl(float dt, GObj* gameObject)
+    {
+
+    }
 };
 
 #endif

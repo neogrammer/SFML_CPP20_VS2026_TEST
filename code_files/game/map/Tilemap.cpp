@@ -95,10 +95,6 @@ void Tilemap::loadMap(const std::string& tilemapFilename_, const std::string& ti
 				int tNum;
 				tFile >> tNum;
 
-			
-
-				mTmap.emplace_back(Tile{});
-
 				if (tNum >= 0)
 				{
 
