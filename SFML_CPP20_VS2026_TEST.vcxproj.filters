@@ -153,6 +153,9 @@
     <ClCompile Include="code_files\game\map\ParallaxBG.cpp">
       <Filter>Headers\working_set</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\io\ActionMgr.cpp">
+      <Filter>Headers\working_set</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -239,6 +242,9 @@
       <Filter>Headers\done</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\map\ParallaxBG.h">
+      <Filter>Headers\working_set</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\io\ActionMgr.h">
       <Filter>Headers\working_set</Filter>
     </ClInclude>
   </ItemGroup>

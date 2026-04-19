@@ -7,6 +7,8 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
     static float bufferedRight = 0.f;
     bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
     bool a = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+    bool space = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+
 
     if (d)
     {
@@ -24,6 +26,18 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
     else
     {
         bufferedLeft = 0.f;
+    }
+
+    gameObject->jumpPressedThisFrame = false;
+
+    if (space && !gameObject->jumpHeld)
+    {
+        gameObject->jumpHeld = true;
+        gameObject->jumpPressedThisFrame = true;
+    }
+    else if (!space)
+    {
+        gameObject->jumpHeld = false;
     }
 
     auto& c = *dynamic_cast<AnimObj*>(gameObject);

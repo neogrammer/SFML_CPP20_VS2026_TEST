@@ -50,9 +50,31 @@ public:
 	std::vector<std::shared_ptr<Component>> mComponents;
 
 	GObj* copy{ nullptr };
+	bool grounded{ true };
+	bool justLeftGround{ false };
+	bool justLanded{ false };
 
 
+	// push this into player
+	bool dashStarting{};
+	bool dashing{};
+	bool dashEnding{};
+	bool wallKicking{};
+	bool wallLanding{};
+	bool wallSliding{};
+	bool teleportingIn{};
+	bool teleportLanding{};
+	bool weaponIsHoldingShootPose{};
 
+	// put this into io
+	bool jumpPressedThisFrame{};
+	bool jumpHeld{};
+	bool dashPressedThisFrame{};
+	bool dashHeld{};
+	bool shootPressedThisFrame{};
+	bool shootHeld{};
+	bool leftHeld{};
+	bool rightHeld{};
 
 public:
 	void addComponent(std::shared_ptr<Component> component);

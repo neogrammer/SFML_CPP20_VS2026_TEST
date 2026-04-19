@@ -13,7 +13,18 @@ eStateID PlayState::updateImpl(float dt)
     // handle static input always first in update for all objects that are controlled by player
     handleStaticInputImpl(dt, gameObject);
 
+	gameObject->rightHeld = false;
+	gameObject->leftHeld = false;
 
+	if (gameObject->getVelocity().x < -10.f)
+	{
+		gameObject->leftHeld = true;
+	}
+	
+	if (gameObject->getVelocity().x > 10.f)
+	{
+		gameObject->rightHeld = true;
+	}
 
     if (mPendingState != eStateID::None && mPendingState != eStateID::Count)
     {
@@ -22,12 +33,57 @@ eStateID PlayState::updateImpl(float dt)
         return tmpState;
     }
 
-    // update back buffer for each entity first
-    gameObject->update(dt);
 
+
+	ActionIntent intent;
+
+	intent.moveX = 0.f;
+	if (gameObject->leftHeld)
+	{
+		intent.moveX -= 1.f;
+	}
+	if (gameObject->rightHeld) intent.moveX += 1.f;
+
+	intent.jumpPressed = gameObject->jumpPressedThisFrame;
+	intent.jumpHeld = gameObject->jumpHeld;
+	intent.dashPressed = gameObject->dashPressedThisFrame;
+	intent.dashHeld = gameObject->dashHeld;
+	intent.shootPressed = gameObject->shootPressedThisFrame;
+	intent.shootHeld = gameObject->shootHeld;
+
+    // update back buffer for each entity first
+    
 
     // after all the objects are updated in the back buffer, swap the buffer with the frontbuffer
+	ActionContext ctx;
+	ctx.velocity = gameObject->getVelocity();
+
+	ctx.grounded = gameObject->grounded;
+	ctx.justLeftGround = gameObject->justLeftGround;
+	ctx.justLanded = gameObject->justLanded;
+
+	ctx.dashStarting = gameObject->dashStarting;
+	ctx.dashing = gameObject->dashing;
+	ctx.dashEnding = gameObject->dashEnding;
+
+	ctx.wallKicking = gameObject->wallKicking;
+	ctx.wallLanding = gameObject->wallLanding;
+	ctx.wallSliding = gameObject->wallSliding;
+
+	ctx.teleportingIn = gameObject->teleportingIn;
+	ctx.teleportLanding = gameObject->teleportLanding;
+
+	ctx.shootingLocked = gameObject->weaponIsHoldingShootPose;
+
+	mActMgr.update(*dynamic_cast<AnimObj*>(gameObject), intent, ctx);
+	gameObject->update(dt);
     gameObject->swapdate();
+
+
+
+
+
+
 
     return eStateID::None;
     

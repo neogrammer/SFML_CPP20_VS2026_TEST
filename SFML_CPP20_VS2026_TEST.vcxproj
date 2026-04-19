@@ -151,6 +151,7 @@
     <ClCompile Include="code_files\game\GObj.cpp" />
     <ClCompile Include="code_files\game\Game.cpp" />
     <ClCompile Include="code_files\game\Globs.cpp" />
+    <ClCompile Include="code_files\game\io\ActionMgr.cpp" />
     <ClCompile Include="code_files\game\map\ParallaxBG.cpp" />
     <ClCompile Include="code_files\game\map\Tilemap.cpp" />
     <ClCompile Include="code_files\game\res\Cfg.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="code_files\game\Game.h" />
     <ClInclude Include="code_files\game\GameState.h" />
     <ClInclude Include="code_files\game\Globs.h" />
+    <ClInclude Include="code_files\game\io\ActionMgr.h" />
     <ClInclude Include="code_files\game\map\ParallaxBG.h" />
     <ClInclude Include="code_files\game\map\Tilemap.h" />
     <ClInclude Include="code_files\game\misc\util.h" />

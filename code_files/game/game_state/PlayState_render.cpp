@@ -2,6 +2,10 @@
 
 void PlayState::renderImpl(sf::RenderWindow& window)
 {
+
+
+
+
 	static float prevCenterX{ 0.f };
 	auto centerX = gameObject->getPos().x + (gameObject->getOffset().x + (gameObject->getSize().x / 2.f));
 	if (window.mapCoordsToPixel({ centerX,0.f }).x > 800 && gameObject->isFacingRight() && centerX > prevCenterX)

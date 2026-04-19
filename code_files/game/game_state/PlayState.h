@@ -8,9 +8,12 @@
 #include "../../game/map/Tilemap.h"
 #include <memory>
 #include "../map/ParallaxBG.h"
+#include "../io/ActionMgr.h"
 
 // A specific implementation
 class PlayState : public GameState<PlayState> {
+
+    ActionMgr mActMgr{};
 
     std::unique_ptr<Tilemap> tmap{};
     ParallaxBG mParallaxBG{ 8 };
