@@ -13,6 +13,12 @@ eStateID PlayState::updateImpl(float dt)
     // handle static input always first in update for all objects that are controlled by player
     handleStaticInputImpl(dt, gameObject);
 
+	if (!gameObject->grounded)
+	{
+		gameObject->setVel({ gameObject->getVelocity().x, gameObject->getVelocity().y + 100.f});
+	}
+
+
 	gameObject->rightHeld = false;
 	gameObject->leftHeld = false;
 

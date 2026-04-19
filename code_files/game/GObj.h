@@ -50,7 +50,7 @@ public:
 	std::vector<std::shared_ptr<Component>> mComponents;
 
 	GObj* copy{ nullptr };
-	bool grounded{ true };
+	bool grounded{ false };
 	bool justLeftGround{ false };
 	bool justLanded{ false };
 
