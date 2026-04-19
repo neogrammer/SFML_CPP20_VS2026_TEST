@@ -58,7 +58,7 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
             if (d && bufferedRight >= bufferTime)
             {
                 gameObject->setVel({ 500.f, gameObject->getVel().y });
-                gameObject->setFacingRight(true);
+                gameObject->setFacingRightCpy(true);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
                     c.setCurrentAnim(AnimName::Run);
@@ -69,7 +69,7 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
             {
 
                 gameObject->setVel({ -500.f, gameObject->getVel().y });
-                gameObject->setFacingRight(false);
+                gameObject->setFacingRightCpy(false);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
                     c.setCurrentAnim(AnimName::Run);

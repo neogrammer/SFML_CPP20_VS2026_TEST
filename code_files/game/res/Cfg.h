@@ -20,7 +20,7 @@ struct Cfg
 	static void Initialize();
 
 	// Resource Enums 
-	enum class Textures : int { PlayerAtlas, BallsBG, SplashBG, TitleBG, TilesetJungle1, BlankTile, Default, Count, None };
+	enum class Textures : int { PlayerAtlas, BallsBG, SplashBG, TitleBG, TilesetJungle1, PLXBG1, PLXBG2, PLXBG3, PLXBG4, PLXBG5, PLXBG6, PLXBG7, PLXBG8, BlankTile, Default, Count, None };
 	enum class Fonts : int { Bubbly, Count, None };
 
 

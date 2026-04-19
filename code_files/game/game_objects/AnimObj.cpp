@@ -185,7 +185,7 @@ void AnimObj::loadAnimation(AnimName nameID_, Cfg::Textures texID_, std::vector<
 	{
 		currentAnim = nameID_;
 		currentIndex = 0;
-		setFacingRight(true);
+		setFacingRightCpy(true);
 		setID(texIDs[nameID_]);
 	}
 
@@ -618,6 +618,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 	other->setUniDirectional(uniDirectionals_.at(startAnim));
 	setCopyBase();
 	setBase();
+
 }
 
 
@@ -646,6 +647,7 @@ void AnimObj::update(float dt_)
 	GObj::update(dt_);
 	animate(dt_);
 	setCopyBase();
+
 }
 
 void AnimObj::swapdate()

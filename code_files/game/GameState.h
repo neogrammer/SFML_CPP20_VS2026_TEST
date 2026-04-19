@@ -15,7 +15,6 @@ enum class eStateID
 template<typename Derived>
 class GameState
 {
-    
 public:
     GameState<Derived>() {}
     ~GameState<Derived>() {}
@@ -45,6 +44,10 @@ public:
     void handleStaticInput(float dt, GObj* gameObject) {
         static_cast<Derived*>(this->handleStaticInputImpl(dt, gameObject));
     }
+
+
+protected:
+    sf::View mainView{};
 
 };
 #endif

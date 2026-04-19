@@ -12,4 +12,63 @@ void PlayState::enterImpl() {
     tmap = std::make_unique<Tilemap>();
     tmap->loadMap("assets/maps/tilemaps/tilemapJungle1.map", "assets/maps/tilesets/tileset_jungle1.tst");
 
+
+
+    // Add farthest -> closest
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG8),
+        0.30f,
+        0.30f,
+        sf::Color(190, 200, 220, 90)     // distant, fogged out
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG7),
+        0.40f,
+        0.40f,
+        sf::Color(210, 215, 225, 140)
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG6),
+        0.50f,
+        0.50f,
+        sf::Color(235, 235, 235, 210)
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG5),
+        0.60f,
+        0.60f,
+        sf::Color::White
+    );
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG4),
+        0.70f,
+        0.70f,
+        sf::Color(190, 200, 220, 90)     // distant, fogged out
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG3),
+        0.80f,
+        0.80f,
+        sf::Color(210, 215, 225, 140)
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG2),
+        0.90f,
+        0.90f,
+        sf::Color(235, 235, 235, 210)
+    );
+
+    mParallaxBG.addLayer(
+        Cfg::textures.get((int)Cfg::Textures::PLXBG1),
+        1.00f,
+        1.00f,
+        sf::Color::White
+    );
+
+    mParallaxBG.setAnchorWorldPosition(0.0f, 0.0f);
 }

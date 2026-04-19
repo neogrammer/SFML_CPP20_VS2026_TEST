@@ -105,7 +105,7 @@ bool Game::Initialize()
 
     stateMap[eStateID::Splash] = SplashState{};
     stateMap[eStateID::Title] = TitleState{};
-    stateMap[eStateID::Play] = PlayState{};
+    stateMap[eStateID::Play] = PlayState{mWindow};
 
     currState = &stateMap[eStateID::Splash];
     std::visit([this](auto& s) {

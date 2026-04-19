@@ -49,6 +49,45 @@
     <Filter Include="code_files\PlayState">
       <UniqueIdentifier>{3a46d646-ad89-401e-a60f-6d257b601d7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets\anims">
+      <UniqueIdentifier>{79fd1823-0853-4ef7-8cc0-57d6af9bd0e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\maps">
+      <UniqueIdentifier>{b755b5c5-6b49-4d6f-8ba3-1b755925887d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\maps\tilemaps">
+      <UniqueIdentifier>{dddf10d0-5aa1-4bb3-ae7e-33fd66808f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\maps\tilesets">
+      <UniqueIdentifier>{3ebe9479-df98-4015-ba5c-e284e9f305a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures">
+      <UniqueIdentifier>{e9cb8c54-b4f0-4fea-b0f4-5f6a8c42cccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures\player">
+      <UniqueIdentifier>{0c68de17-ed5e-4198-9251-90e2f7ba28cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures\splash_state">
+      <UniqueIdentifier>{618e0ddb-66a1-4205-85a7-863afec168fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures\title_state">
+      <UniqueIdentifier>{19b5f573-de54-433a-be95-7ed911c208b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\map">
+      <UniqueIdentifier>{7eb18e37-7243-49cc-846a-ea301412b83b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\done">
+      <UniqueIdentifier>{b96a2bed-2d39-4157-b618-9a2f8ebbc0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\working_set">
+      <UniqueIdentifier>{54cb1636-134a-4ea5-9857-2369c3d4cce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures\backgrounds">
+      <UniqueIdentifier>{311b529a-8f45-4635-abdb-1a6746cbc89e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\textures\backgrounds\bg0">
+      <UniqueIdentifier>{233df0df-4e5f-4ffa-a757-9e11273ae3ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
@@ -90,9 +129,6 @@
     <ClCompile Include="code_files\game\res\Cfg.cpp">
       <Filter>code_files\game\res</Filter>
     </ClCompile>
-    <ClCompile Include="code_files\game\map\Tilemap.cpp">
-      <Filter>code_files</Filter>
-    </ClCompile>
     <ClCompile Include="code_files\game\game_state\PlayState_handleStaticInput.cpp">
       <Filter>code_files\PlayState</Filter>
     </ClCompile>
@@ -110,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="code_files\game\game_state\PlayState_update.cpp">
       <Filter>code_files\PlayState</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\map\Tilemap.cpp">
+      <Filter>code_files\game\map</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\map\ParallaxBG.cpp">
+      <Filter>Headers\working_set</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,87 +196,126 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code_files\game\Component.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\Game.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\GObj.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\Globs.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\GameState.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\game_objects\AnimObj.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\res\Cfg.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\res\ResourceManager.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\misc\util.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\game_state\PlayState.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\game_state\SplashState.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\game_state\TitleState.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="code_files\game\game_state\StateVar.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="code_files\game\map\Tilemap.h">
       <Filter>3rd_party</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\PlayState.h">
+      <Filter>Headers\working_set</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Game.h">
+      <Filter>Headers\working_set</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\GObj.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Globs.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\res\Cfg.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_objects\AnimObj.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\misc\util.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\TitleState.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\SplashState.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_state\StateVar.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\res\ResourceManager.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Component.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\GameState.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\map\ParallaxBG.h">
+      <Filter>Headers\working_set</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code_files\game\res\tpl\ResourceManager.tpl">
       <Filter>Headers\tpl</Filter>
     </None>
-    <None Include="assets\anims\player.anm" />
-    <None Include="assets\maps\tilemaps\tilemapJungle1.map" />
-    <None Include="assets\maps\tilesets\tileset_jungle1.tst" />
+    <None Include="assets\maps\tilesets\tileset_jungle1.tst">
+      <Filter>assets\maps\tilesets</Filter>
+    </None>
+    <None Include="assets\maps\tilemaps\tilemapJungle1.map">
+      <Filter>assets\maps\tilemaps</Filter>
+    </None>
+    <None Include="assets\anims\player.anm">
+      <Filter>assets\anims</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="assets\textures\actors\mmedit.png">
-      <Filter>assets</Filter>
-    </Image>
     <Image Include="assets\textures\blank_tile.png">
-      <Filter>assets</Filter>
+      <Filter>assets\textures</Filter>
     </Image>
     <Image Include="assets\textures\invariant.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\splash_state\BG.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\splash_state\BG2.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\splash_state\GreyBG.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\splash_state\SplashBG_Balls.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\tileset128x128.png">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="assets\textures\title_state\TitleBG.png">
-      <Filter>assets</Filter>
+      <Filter>assets\textures</Filter>
     </Image>
     <Image Include="assets\textures\tileset1.png">
-      <Filter>assets</Filter>
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="assets\textures\tileset128x128.png">
+      <Filter>assets\textures</Filter>
+    </Image>
+    <Image Include="assets\textures\actors\mmedit.png">
+      <Filter>assets\textures\player</Filter>
+    </Image>
+    <Image Include="assets\textures\title_state\TitleBG.png">
+      <Filter>assets\textures\title_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\logo.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\SplashBG.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\SplashBG_Balls.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\BG2.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\BG.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\splash_state\GreyBG.png">
+      <Filter>assets\textures\splash_state</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\1.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\2.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\3.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\4.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\5.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\6.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\7.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
+    </Image>
+    <Image Include="assets\textures\backgrounds\bg0\8.png">
+      <Filter>assets\textures\backgrounds\bg0</Filter>
     </Image>
   </ItemGroup>
 </Project>

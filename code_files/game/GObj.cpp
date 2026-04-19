@@ -27,8 +27,14 @@ void GObj::setUniDirectional(bool cond_)
 
 void GObj::setFacingRight(bool cond_)
 {
+    facingRight = cond_;
+}
+
+void GObj::setFacingRightCpy(bool cond_)
+{
     copy->facingRight = cond_;
 }
+
 
 void GObj::setSize(sf::Vector2f size_)
 {
@@ -141,10 +147,6 @@ void GObj::setUniDirectionalCpy(bool cond_)
     copy->setUniDirectional(cond_);
 }
 
-void GObj::setFacingRightCpy(bool cond_)
-{
-    copy->setFacingRight(cond_);
-}
 
 void GObj::setSizeCpy(sf::Vector2f size)
 {

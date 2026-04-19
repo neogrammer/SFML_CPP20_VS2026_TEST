@@ -28,6 +28,7 @@ public:
 
 	void setUniDirectional(bool cond_);
 	void setFacingRight(bool cond_);
+	void setFacingRightCpy(bool cond_);
 	void setSize(sf::Vector2f);
 	void setOffset(sf::Vector2f);
 	sf::IntRect getRect();
@@ -37,7 +38,6 @@ public:
 	void setPos(sf::Vector2f pos_);
 	void setVel(sf::Vector2f vel_);
 	void setUniDirectionalCpy(bool cond_);
-	void setFacingRightCpy(bool cond_);
 	void setSizeCpy(sf::Vector2f);
 	void setOffsetCpy(sf::Vector2f);
 	void setRectCpy(sf::IntRect rect_);

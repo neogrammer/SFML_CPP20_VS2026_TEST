@@ -2,6 +2,12 @@
 
 //void handleStaticInput(float dt, GObj* gameObject);
 
+PlayState::PlayState(sf::RenderWindow& wnd)
+    : GameState<PlayState>{}
+{
+    mainView = wnd.getDefaultView();
+}
+
 eStateID PlayState::updateImpl(float dt)
 {
     // handle static input always first in update for all objects that are controlled by player

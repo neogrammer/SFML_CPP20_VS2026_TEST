@@ -151,6 +151,7 @@
     <ClCompile Include="code_files\game\GObj.cpp" />
     <ClCompile Include="code_files\game\Game.cpp" />
     <ClCompile Include="code_files\game\Globs.cpp" />
+    <ClCompile Include="code_files\game\map\ParallaxBG.cpp" />
     <ClCompile Include="code_files\game\map\Tilemap.cpp" />
     <ClCompile Include="code_files\game\res\Cfg.cpp" />
     <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="code_files\game\Game.h" />
     <ClInclude Include="code_files\game\GameState.h" />
     <ClInclude Include="code_files\game\Globs.h" />
+    <ClInclude Include="code_files\game\map\ParallaxBG.h" />
     <ClInclude Include="code_files\game\map\Tilemap.h" />
     <ClInclude Include="code_files\game\misc\util.h" />
     <ClInclude Include="code_files\game\res\Cfg.h" />
@@ -200,11 +202,21 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\textures\actors\mmedit.png" />
+    <Image Include="assets\textures\backgrounds\bg0\1.png" />
+    <Image Include="assets\textures\backgrounds\bg0\2.png" />
+    <Image Include="assets\textures\backgrounds\bg0\3.png" />
+    <Image Include="assets\textures\backgrounds\bg0\4.png" />
+    <Image Include="assets\textures\backgrounds\bg0\5.png" />
+    <Image Include="assets\textures\backgrounds\bg0\6.png" />
+    <Image Include="assets\textures\backgrounds\bg0\7.png" />
+    <Image Include="assets\textures\backgrounds\bg0\8.png" />
     <Image Include="assets\textures\blank_tile.png" />
     <Image Include="assets\textures\invariant.png" />
     <Image Include="assets\textures\splash_state\BG.png" />
     <Image Include="assets\textures\splash_state\BG2.png" />
     <Image Include="assets\textures\splash_state\GreyBG.png" />
+    <Image Include="assets\textures\splash_state\logo.png" />
+    <Image Include="assets\textures\splash_state\SplashBG.png" />
     <Image Include="assets\textures\splash_state\SplashBG_Balls.png" />
     <Image Include="assets\textures\tileset1.png" />
     <Image Include="assets\textures\tileset128x128.png" />
