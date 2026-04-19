@@ -1,10 +1,35 @@
 #include "PlayState.h"
 
+void handleStaticInput(float dt, GObj* gameObject);
+
 eStateID PlayState::updateImpl(float dt)
 {
-    constexpr float bufferTime = {0.03f};
-    static float bufferedLeft=0.f;
-    static float bufferedRight=0.f;
+
+    handleStaticInput(dt, gameObject);
+
+    if (mPendingState != eStateID::None && mPendingState != eStateID::Count)
+    {
+        eStateID tmpState = mPendingState;
+        mPendingState = eStateID::None;
+        return tmpState;
+    }
+
+    // update back buffer for each entity first
+    gameObject->update(dt);
+
+
+    // after all the objects are updated in the back buffer, swap the buffer with the frontbuffer
+    gameObject->swapdate();
+
+    return eStateID::None;
+    
+}
+
+void handleStaticInput(float dt, GObj* gameObject)
+{
+    constexpr float bufferTime = { 0.03f };
+    static float bufferedLeft = 0.f;
+    static float bufferedRight = 0.f;
     bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
     bool a = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
 
@@ -36,6 +61,7 @@ eStateID PlayState::updateImpl(float dt)
             else if (gameObject->getVelocity().x > 0.001f)
                 gameObject->setVel({ 500.f, gameObject->getVel().y });
 
+
             if (gameObject->getVelocity().x >= -0.001f && gameObject->getVelocity().x <= 0.001f)
             {
                 if (c.getCurrentAnim() != AnimName::Idle)
@@ -56,7 +82,7 @@ eStateID PlayState::updateImpl(float dt)
         {
             if (d && bufferedRight >= bufferTime)
             {
-                gameObject->setVel({ 500.f, gameObject->getVel().y });
+                gameObject->setVel({ 0.f, gameObject->getVel().y });
                 gameObject->setFacingRight(true);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
@@ -67,7 +93,7 @@ eStateID PlayState::updateImpl(float dt)
             if (a && bufferedLeft >= bufferTime)
             {
 
-                gameObject->setVel({ -500.f, gameObject->getVel().y });
+                gameObject->setVel({ -0.f, gameObject->getVel().y });
                 gameObject->setFacingRight(false);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
@@ -90,24 +116,4 @@ eStateID PlayState::updateImpl(float dt)
         }
     }
 
-
-    
-
-
-    if (mPendingState != eStateID::None && mPendingState != eStateID::Count)
-    {
-        eStateID tmpState = mPendingState;
-        mPendingState = eStateID::None;
-        return tmpState;
-    }
-
-    // update back buffer for each entity first
-    gameObject->update(dt);
-
-
-    // after all the objects are updated in the back buffer, swap the buffer with the frontbuffer
-    gameObject->swapdate();
-
-    return eStateID::None;
-    
 }

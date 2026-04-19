@@ -18,7 +18,7 @@
 
 enum class AnimName
 {
-	TeleportIn,
+	TeleportIn = 0,
 	TeleportLand,
 	Idle,
 	Run,
