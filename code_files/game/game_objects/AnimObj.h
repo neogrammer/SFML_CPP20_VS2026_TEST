@@ -98,6 +98,7 @@ public:
 	void animBfrSwap();
 	AnimName getCurrentAnim();
 	void setCurrentAnim(AnimName anim);
+	void setCurrentIndex(int idx);
 
 
 };
