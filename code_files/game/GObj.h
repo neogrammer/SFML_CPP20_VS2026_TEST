@@ -46,6 +46,9 @@ public:
 	void setPosCpy(sf::Vector2f pos_);
 	void setVelCpy(sf::Vector2f vel_);
 	sf::Vector2f getVel();
+	const sf::Vector2f getVelSafe() const;
+	const sf::Vector2f getSizeSafe() const;
+	const sf::Vector2f getPosSafe() const;
 	void move(sf::Vector2f amt_);
 	std::vector<std::shared_ptr<Component>> mComponents;
 

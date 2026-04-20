@@ -122,6 +122,11 @@ sf::Vector2f GObj::getPos()
     return position;
 }
 
+const sf::Vector2f GObj::getPosSafe() const
+{
+    return position;
+}
+
 sf::Vector2f GObj::getSize()
 {
     return size;
@@ -186,6 +191,16 @@ void GObj::setVelCpy(sf::Vector2f vel_)
 sf::Vector2f GObj::getVel()
 {
     return velocity;
+}
+
+const sf::Vector2f GObj::getVelSafe() const
+{
+    return velocity;
+}
+
+const sf::Vector2f GObj::getSizeSafe() const
+{
+    return size;
 }
 
 void GObj::move(sf::Vector2f amt_)

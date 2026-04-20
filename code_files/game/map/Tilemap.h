@@ -51,7 +51,7 @@ class Tilemap
 	int mCols{}, mRows{};
 	Tileset mTset{};
 	std::vector<Tile> mTmap{};
-
+	std::vector<GObj*> solids{};
 	static Tile BlankTile;
 
 public:
@@ -61,6 +61,10 @@ public:
 	sf::Vector2f getTileSize();
 
 	void renderMap(sf::RenderWindow& wnd_);
+
+	std::vector<GObj*>& getSolids();
+
+	
 
 };
 

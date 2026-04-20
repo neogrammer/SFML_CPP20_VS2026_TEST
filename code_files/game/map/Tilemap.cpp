@@ -86,8 +86,8 @@ void Tilemap::loadMap(const std::string& tilemapFilename_, const std::string& ti
 		tFile >> mCols >> mRows;
 		
 
-
-
+		solids.reserve(mCols * mRows);
+		mTmap.reserve(mCols * mRows);
 		for (int y = 0; y < mRows; y++)
 			for (int x = 0; x < mCols; x++)
 			{
@@ -108,6 +108,7 @@ void Tilemap::loadMap(const std::string& tilemapFilename_, const std::string& ti
 					mTmap.emplace_back(Tile{ t.getTexID(), t.getRect(), true, { float(x * getTileSize().x), float(y * getTileSize().y) }, { getTileSize() } });
 					mTmap[num].solid = true;
 					mTmap[num].blank = false;
+					solids.emplace_back(&mTmap[num]);
 				}
 				else
 				{
@@ -127,6 +128,7 @@ void Tilemap::loadMap(const std::string& tilemapFilename_, const std::string& ti
 
 			}
 
+		solids.shrink_to_fit();
 		tFile.close();
 	}
 	else
@@ -153,4 +155,10 @@ void Tilemap::renderMap(sf::RenderWindow& wnd_)
 		if (!mTmap[i].blank)
 			wnd_.draw(*mTmap[i].sprite());
 	}
+}
+
+
+std::vector<GObj*>& Tilemap::getSolids()
+{
+	return solids;
 }

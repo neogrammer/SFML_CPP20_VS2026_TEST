@@ -862,19 +862,21 @@ void AnimObj::setCurrentAnim(AnimName anim)
 {
 	auto& c = *dynamic_cast<AnimObj*>(copy);
 
-	if (c.currentAnim != anim)
+	if (c.currentAnim == anim)
 	{
-		c.currentAnim = anim;
-		c.currentIndex = 0;
-		c.animElapsed = 0.f;
-		c.loopElapsed = 0.f;
-		c.playing = true;
-
-
-		c.setID(texIDs.at(anim));
-		if (isUniDirectional())
-			c.setUniDirectional(uniDirectionals.at(anim));
+		return;
 	}
+
+	c.currentAnim = anim;
+	c.currentIndex = 0;
+	c.animElapsed = 0.f;
+	c.loopElapsed = 0.f;
+	c.playing = true;
+
+	c.setID(texIDs.at(anim));
+	if (isUniDirectional())
+		c.setUniDirectional(uniDirectionals.at(anim));
+
 	int currDir = c.isFacingRight() ? 0 : 1;
 	if (currDir >= (int)frames.at(anim).size())
 	{

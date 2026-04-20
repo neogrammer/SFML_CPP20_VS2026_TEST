@@ -156,6 +156,9 @@
     <ClCompile Include="code_files\game\io\ActionMgr.cpp">
       <Filter>Headers\working_set</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\Physics.cpp">
+      <Filter>code_files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -246,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="code_files\game\io\ActionMgr.h">
       <Filter>Headers\working_set</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\Physics.h">
+      <Filter>Headers\done</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

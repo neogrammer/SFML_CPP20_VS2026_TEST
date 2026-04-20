@@ -154,6 +154,7 @@
     <ClCompile Include="code_files\game\io\ActionMgr.cpp" />
     <ClCompile Include="code_files\game\map\ParallaxBG.cpp" />
     <ClCompile Include="code_files\game\map\Tilemap.cpp" />
+    <ClCompile Include="code_files\game\Physics.cpp" />
     <ClCompile Include="code_files\game\res\Cfg.cpp" />
     <ClCompile Include="code_files\third_party\imgui-sfml\imgui-SFML.cpp" />
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="code_files\game\map\ParallaxBG.h" />
     <ClInclude Include="code_files\game\map\Tilemap.h" />
     <ClInclude Include="code_files\game\misc\util.h" />
+    <ClInclude Include="code_files\game\Physics.h" />
     <ClInclude Include="code_files\game\res\Cfg.h" />
     <ClInclude Include="code_files\game\res\ResourceManager.h" />
   </ItemGroup>

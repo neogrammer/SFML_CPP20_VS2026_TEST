@@ -1,4 +1,5 @@
 #include "PlayState.h"
+#include "../Physics.h"
 
 //void handleStaticInput(float dt, GObj* gameObject);
 
@@ -15,7 +16,7 @@ eStateID PlayState::updateImpl(float dt)
 
 	if (!gameObject->grounded)
 	{
-		gameObject->setVel({ gameObject->getVelocity().x, gameObject->getVelocity().y + 100.f});
+		gameObject->setVel({ gameObject->getVelocity().x, 100.f});
 	}
 
 
@@ -81,8 +82,15 @@ eStateID PlayState::updateImpl(float dt)
 
 	ctx.shootingLocked = gameObject->weaponIsHoldingShootPose;
 
-	mActMgr.update(*dynamic_cast<AnimObj*>(gameObject), intent, ctx);
+	//mActMgr.update(*dynamic_cast<AnimObj*>(gameObject), intent, ctx);
 	gameObject->update(dt);
+
+
+
+
+
+
+	Physics::moveFirstOutsideVector(gameObject, tmap->getSolids());
     gameObject->swapdate();
 
 
