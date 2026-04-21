@@ -36,6 +36,10 @@ public:
         bool zeroVelocityOnResolvedAxis = true
     );
 
+    static bool overlapsAnyAt(const GObj* first,
+        const std::vector<GObj*>& others,
+        const sf::Vector2f& testPos);
+
     // Reads all objects from current/front state, sorts blockers by distance
     // from FIRST (nearest to farthest), resolves in that order, and re-checks
     // after movement in case the push causes a new overlap with another object.
@@ -72,4 +76,14 @@ private:
         const sf::Vector2f& newPosition,
         const sf::Vector2f& newVelocity
     );
+
+public:
+    static bool PointVsRect(const GObj& p, const GObj* r);
+
+
+    static bool RectVsRect(const GObj* r1, const GObj* r2);
+
+    static bool RayVsRect(const sf::Vector2f& ray_origin, const sf::Vector2f& ray_dir, const GObj* target, sf::Vector2f& contact_point, sf::Vector2f& contact_normal, float& t_hit_near);
+    static bool DynamicRectVsRect(const GObj* r_dynamic, const float fTimeStep, GObj& r_static, sf::Vector2f& contact_point, sf::Vector2f& contact_normal, float& contact_time);
+    static bool ResolveDynamicRectVsRect(GObj* r_dynamic, const float fTimeStep, GObj* r_static);
 };

@@ -10,6 +10,8 @@
 
 class GObj
 {
+	friend class Physics;
+
 protected:
 	sf::Vector2f position;
 
@@ -22,7 +24,6 @@ protected:
 	bool facingRight{ true };
 	bool uniDirectional;
 	static sf::Texture defaultTex;
-	
 
 public:
 
@@ -32,6 +33,7 @@ public:
 	void setSize(sf::Vector2f);
 	void setOffset(sf::Vector2f);
 	sf::IntRect getRect();
+	const sf::Vector2f getOffSafe() const;
 	void setRect(sf::IntRect rect_);
 	void setID(Cfg::Textures texID_);
 	void setAccleration(sf::Vector2f offset_);
@@ -51,6 +53,8 @@ public:
 	const sf::Vector2f getPosSafe() const;
 	void move(sf::Vector2f amt_);
 	std::vector<std::shared_ptr<Component>> mComponents;
+	void setCopyPos(float dt_);
+	std::array<GObj*, 4> contact;
 
 	GObj* copy{ nullptr };
 	bool grounded{ false };

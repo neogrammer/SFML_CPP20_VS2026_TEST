@@ -642,7 +642,7 @@ void AnimObj::update(float dt_)
 		std::cout << "anim obj copy not good!" << std::endl;
 		throw std::runtime_error("anim obj copy not good!");
 	}
-
+	
 	// in this order double buffer
 	GObj::update(dt_);
 	animate(dt_);

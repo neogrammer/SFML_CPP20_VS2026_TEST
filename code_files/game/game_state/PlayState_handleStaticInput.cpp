@@ -45,13 +45,13 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
     {
         if (a && d)
         {
-            if (gameObject->getVelocity().x < -0.001f)
-                gameObject->setVel({ -500.f, gameObject->getVel().y });
-            else if (gameObject->getVelocity().x > 0.001f)
-                gameObject->setVel({ 500.f, gameObject->getVel().y });
+            if (gameObject->copy->getVelocity().x < -0.001f)
+                gameObject->copy->setVel({ -500.f, gameObject->getVel().y });
+            else if (gameObject->copy->getVelocity().x > 0.001f)
+                gameObject->copy->setVel({ 500.f, gameObject->getVel().y });
 
 
-            if (gameObject->getVelocity().x >= -0.001f && gameObject->getVelocity().x <= 0.001f)
+            if (gameObject->copy->getVelocity().x >= -0.001f && gameObject->copy->getVelocity().x <= 0.001f)
             {
                 if (c.getCurrentAnim() != AnimName::Idle)
                 {
@@ -71,7 +71,7 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
         {
             if (d && bufferedRight >= bufferTime)
             {
-                gameObject->setVel({ 500.f, gameObject->getVel().y });
+                gameObject->copy->setVel({ 500.f, gameObject->copy->getVel().y });
                 gameObject->setFacingRightCpy(true);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
@@ -82,7 +82,7 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
             if (a && bufferedLeft >= bufferTime)
             {
 
-                gameObject->setVel({ -500.f, gameObject->getVel().y });
+                gameObject->copy->setVel({ -500.f, gameObject->copy->getVel().y });
                 gameObject->setFacingRightCpy(false);
                 if (c.getCurrentAnim() != AnimName::Run)
                 {
@@ -96,7 +96,7 @@ void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
     {
         if ((!d && !a))
         {
-            gameObject->setVel({ 0.f, gameObject->getVel().y });
+            gameObject->copy->setVel({ 0.f, gameObject->copy->getVel().y });
 
             if (c.getCurrentAnim() != AnimName::Idle)
             {

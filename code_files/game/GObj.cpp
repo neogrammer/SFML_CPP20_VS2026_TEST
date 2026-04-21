@@ -51,6 +51,11 @@ sf::IntRect GObj::getRect()
     return texRect;
 }
 
+const sf::Vector2f GObj::getOffSafe() const
+{
+    return offset;
+}
+
 void GObj::setAccleration(sf::Vector2f acceleration_)
 {
     acceleration = acceleration_;
@@ -239,7 +244,7 @@ std::unique_ptr<sf::Sprite> GObj::sprite()
         out = std::make_unique<sf::Sprite>(Cfg::textures.get((int)texID));  //  Get from Cfg::Textures
     }
 
-    out->setPosition(position - offset);
+    out->setPosition(position - offset);// - offset);
     out->setTextureRect(texRect);
 
     return std::move(out);
@@ -257,23 +262,30 @@ void GObj::update(float dt_)
     if (copy)
     {
     // friction
-    if (this->velocity.x > 0.f) 
-        copy->velocity.x = this->velocity.x - 0.009f;
-    if (this->velocity.x < 0.f) 
-        copy->velocity.x = this->velocity.x + 0.009f;
+    if (copy->velocity.x > 0.f) 
+        copy->velocity.x = copy->velocity.x - 0.009f;
+    if (copy->velocity.x < 0.f) 
+        copy->velocity.x = copy->velocity.x + 0.009f;
 
     
-        copy->velocity = this->velocity + this->acceleration;
-        copy->position = this->position + copy->velocity * dt_;
-        copy->acceleration = { 0.f,0.f };
+        copy->velocity = copy->velocity + copy->acceleration;
+        
+       
     }
+
 }
 
+void GObj::setCopyPos(float dt_)
+{
+    copy->position = this->position + copy->velocity * dt_;
+}
 void GObj::swapdate()
 {
     this->acceleration = copy->acceleration;
+    copy->acceleration = { 0.f,0.f };
     this->velocity = copy->velocity;
     this->position = copy->position;
+    this->grounded = copy->grounded;
 
     this->setFacingRight(copy->isFacingRight());
 }
