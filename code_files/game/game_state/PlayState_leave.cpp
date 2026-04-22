@@ -17,6 +17,5 @@ void PlayState::leaveImpl() {
     mPlayerShots.clear();
     mEnemyShots.clear();
     mEnemies.clear();
-    mDamagePops.clear();
     mHealthPickups.clear();
 }

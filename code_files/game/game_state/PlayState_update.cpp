@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <utility>
 #include <vector>
 
@@ -15,15 +14,8 @@ namespace
     constexpr float JumpVelocity = -2475.0f;
     constexpr float GroundProbeDistance = 1.0f;
     constexpr float SweepSkin = 0.05f;
-    constexpr float LiftOffToRisingPercent = 0.10f;
-    constexpr float JumpPeakBeforeTopPercent = 0.05f;
-    constexpr float FallingAfterPeakPercent = 0.05f;
     constexpr int MaxSweepPasses = 6;
     constexpr int MaxPlayerShots = 3;
-    constexpr float PlayerShotDelay = 0.16f;
-    // Keep the arm-cannon pose alive after each shot. While this timer is
-    // running, repeated shots do not restart from the "pull gun out" frame.
-    constexpr float PlayerShootPoseSeconds = 0.55f;
     constexpr float PlayerShotSpeed = 1350.0f;
     constexpr float EnemyShotSpeed = 920.0f;
     constexpr float EnemyShotDelay = 2.5f;
@@ -32,7 +24,6 @@ namespace
     constexpr float EnemyWalkSpeed = 120.0f;
     constexpr int EnemyShotDamage = 2;
     constexpr float HitFlashSeconds = 0.12f;
-    constexpr float PlayerInvincibleSeconds = 1.15f;
     constexpr int HealthPickupAmount = 5;
     constexpr float HealthPickupGravity = 1450.0f;
 
@@ -106,32 +97,6 @@ namespace
         return context;
     }
 
-    bool isLandingAnim(AnimName anim)
-    {
-        return anim == AnimName::Landing || anim == AnimName::LandingShoot;
-    }
-
-    float estimateJumpHeight(float dt)
-    {
-        float velocityY = JumpVelocity;
-        float height = 0.0f;
-
-        // Your movement uses acceleration as a per-update velocity change,
-        // so this mirrors updatePhysics() instead of using continuous physics.
-        for (int i = 0; i < 120; ++i)
-        {
-            velocityY += GravityPerFrame;
-            if (velocityY >= 0.0f)
-            {
-                break;
-            }
-
-            height += -velocityY * dt;
-        }
-
-        return std::max(height, 1.0f);
-    }
-
     EntityAction actionFromJumpPhase(PlayerJumpAnimPhase phase)
     {
         switch (phase)
@@ -143,91 +108,6 @@ namespace
         case PlayerJumpAnimPhase::Landing:  return EntityAction::Landing;
         default:                            return EntityAction::None;
         }
-    }
-
-    EntityAction updateJumpAnimationPhase(Player& player, bool wasGrounded, float dt)
-    {
-        if (player.copy == nullptr)
-        {
-            return EntityAction::None;
-        }
-
-        if (player.copy->grounded)
-        {
-            if (!wasGrounded)
-            {
-                player.jumpAnimPhase = PlayerJumpAnimPhase::Landing;
-            }
-
-            if (player.jumpAnimPhase == PlayerJumpAnimPhase::Landing)
-            {
-                const AnimName currentAnim = player.getCurrentAnim();
-                const bool landingAlreadyPlaying = isLandingAnim(currentAnim);
-                if (!landingAlreadyPlaying || !player.isCurrentAnimationFinished())
-                {
-                    return EntityAction::Landing;
-                }
-            }
-
-            player.jumpAnimPhase = PlayerJumpAnimPhase::Grounded;
-            player.jumpAnimFramesInAir = 0;
-            return EntityAction::None;
-        }
-
-        if (player.copy->justLeftGround || player.jumpAnimPhase == PlayerJumpAnimPhase::Grounded)
-        {
-            player.jumpAnimPhase = player.copy->getVelSafe().y < 0.0f
-                ? PlayerJumpAnimPhase::LiftOff
-                : PlayerJumpAnimPhase::Falling;
-
-            player.jumpStartY = player.getPosSafe().y;
-            player.jumpPeakY = player.copy->getPosSafe().y;
-            player.jumpExpectedHeight = estimateJumpHeight(dt);
-            player.jumpAnimFramesInAir = 0;
-        }
-
-        player.jumpAnimFramesInAir++;
-
-        if (player.copy->getPosSafe().y < player.jumpPeakY)
-        {
-            player.jumpPeakY = player.copy->getPosSafe().y;
-        }
-
-        const float expectedHeight = std::max(player.jumpExpectedHeight, 1.0f);
-        const float traveledUp = std::max(0.0f, player.jumpStartY - player.copy->getPosSafe().y);
-        const float leftUntilExpectedTop = std::max(0.0f, expectedHeight - traveledUp);
-        const float downFromPeak = std::max(0.0f, player.copy->getPosSafe().y - player.jumpPeakY);
-
-        if (player.jumpAnimPhase == PlayerJumpAnimPhase::LiftOff)
-        {
-            const bool hasShownLiftOffForAFrame = player.jumpAnimFramesInAir > 1;
-            if (hasShownLiftOffForAFrame && traveledUp >= expectedHeight * LiftOffToRisingPercent)
-            {
-                player.jumpAnimPhase = PlayerJumpAnimPhase::Rising;
-            }
-        }
-
-        if (player.jumpAnimPhase == PlayerJumpAnimPhase::Rising)
-        {
-            const bool isNearTop = leftUntilExpectedTop <= expectedHeight * JumpPeakBeforeTopPercent;
-            const bool velocityHasReachedTop = player.copy->getVelSafe().y >= 0.0f;
-            if (isNearTop || velocityHasReachedTop)
-            {
-                player.jumpAnimPhase = PlayerJumpAnimPhase::JumpPeak;
-            }
-        }
-
-        if (player.jumpAnimPhase == PlayerJumpAnimPhase::JumpPeak)
-        {
-            const bool isComingDown = player.copy->getVelSafe().y > 0.0f;
-            const bool hasDroppedEnough = downFromPeak >= expectedHeight * FallingAfterPeakPercent;
-            if (isComingDown && hasDroppedEnough)
-            {
-                player.jumpAnimPhase = PlayerJumpAnimPhase::Falling;
-            }
-        }
-
-        return actionFromJumpPhase(player.jumpAnimPhase);
     }
 
     float distanceSq(sf::Vector2f a, sf::Vector2f b)
@@ -465,127 +345,12 @@ namespace
             point.y <= box.bottom();
     }
 
-    bool isShootAnim(AnimName anim)
-    {
-        return anim == AnimName::Shoot ||
-            anim == AnimName::RunShoot ||
-            anim == AnimName::LiftOffShoot ||
-            anim == AnimName::RisingShoot ||
-            anim == AnimName::JumpPeakShoot ||
-            anim == AnimName::FallingShoot ||
-            anim == AnimName::LandingShoot ||
-            anim == AnimName::DashStartShoot ||
-            anim == AnimName::DashingShoot ||
-            anim == AnimName::DashEndShoot ||
-            anim == AnimName::WallKickShoot ||
-            anim == AnimName::WallLandShoot ||
-            anim == AnimName::WallSlideShoot;
-    }
-
-    sf::Vector2f cannonOffsetFor(Player& player)
-    {
-        const bool right = player.isFacingRight();
-        const AnimName anim = player.getCurrentAnim();
-        const int frame = player.getCurrentIndex();
-        const sf::Vector2f size = player.getSizeSafe();
-
-        float x = right ? size.x + 10.0f : -10.0f;
-        float y = size.y * 0.42f;
-
-        if (anim == AnimName::RunShoot)
-        {
-            const float bob[10]{ 0.0f, -2.0f, -4.0f, -3.0f, 1.0f, 3.0f, 2.0f, 0.0f, -1.0f, 1.0f };
-            y += bob[frame % 10];
-            x += right ? 4.0f : -4.0f;
-        }
-        else if (anim == AnimName::LiftOffShoot || anim == AnimName::RisingShoot || anim == AnimName::JumpPeakShoot)
-        {
-            y = size.y * 0.34f;
-        }
-        else if (anim == AnimName::FallingShoot)
-        {
-            y = size.y * 0.45f;
-        }
-        else if (anim == AnimName::LandingShoot)
-        {
-            y = size.y * 0.52f;
-        }
-        else if (!isShootAnim(anim))
-        {
-            y = size.y * 0.40f;
-        }
-
-        return { x, y };
-    }
 }
 
 PlayState::PlayState(sf::RenderWindow& wnd)
     : GameState<PlayState>{}
 {
     mainView = wnd.getDefaultView();
-}
-
-void PlayState::updateCombatTimers(float dt)
-{
-    // Shooting is press-based. This timer just keeps the shoot pose visible
-    // long enough for the animation to read like an intentional action.
-    mPlayerShotCooldown = std::max(0.0f, mPlayerShotCooldown - dt);
-    mPlayerShootPoseTimer = std::max(0.0f, mPlayerShootPoseTimer - dt);
-    mPlayerInvincibleTimer = std::max(0.0f, mPlayerInvincibleTimer - dt);
-    mPlayerHitFlashTimer = std::max(0.0f, mPlayerHitFlashTimer - dt);
-
-    for (DamagePop& pop : mDamagePops)
-    {
-        pop.timer -= dt;
-        pop.position += pop.velocity * dt;
-    }
-
-    mDamagePops.erase(
-        std::remove_if(mDamagePops.begin(), mDamagePops.end(), [](const DamagePop& pop) { return pop.timer <= 0.0f; }),
-        mDamagePops.end()
-    );
-
-    if (player != nullptr)
-    {
-        player->weaponIsHoldingShootPose = mPlayerShootPoseTimer > 0.0f;
-    }
-}
-
-void PlayState::spawnHealthDamagePop(int damage)
-{
-    if (player == nullptr)
-    {
-        return;
-    }
-
-    DamagePop pop;
-    pop.amount = damage;
-    pop.timer = pop.lifetime;
-
-    const float segmentWidth = 12.0f;
-    const float gap = 2.0f;
-    const int hurtSegment = std::clamp(player->health, 0, player->maxHealth - 1);
-    pop.position = {
-        22.0f + (hurtSegment * (segmentWidth + gap)),
-        48.0f
-    };
-    pop.velocity = { 18.0f,  -52.0f };
-
-    mDamagePops.emplace_back(pop);
-}
-
-bool PlayState::damagePlayer(int damage)
-{
-    if (player == nullptr || mPlayerInvincibleTimer > 0.0f)
-    {
-        return false;
-    }
-
-    player->health = std::max(0, player->health - damage);
-    mPlayerInvincibleTimer = PlayerInvincibleSeconds;
-    mPlayerHitFlashTimer = HitFlashSeconds;
-    spawnHealthDamagePop(damage);
-    return true;
 }
 
 void PlayState::spawnHealthPickup(sf::Vector2f position)
@@ -644,7 +409,7 @@ void PlayState::updateHealthPickups(float dt)
         const Physics::Box playerBox = makeBox(player->getPosSafe(), player->getSizeSafe());
         if (boxesOverlap(makePickupBox(pickup), playerBox))
         {
-            player->health = std::min(player->maxHealth, player->health + HealthPickupAmount);
+            player->heal(HealthPickupAmount);
             pickup.alive = false;
         }
     }
@@ -653,29 +418,6 @@ void PlayState::updateHealthPickups(float dt)
         std::remove_if(mHealthPickups.begin(), mHealthPickups.end(), [](const HealthPickup& pickup) { return !pickup.alive; }),
         mHealthPickups.end()
     );
-}
-
-bool PlayState::tryStartPlayerShot()
-{
-    if (player == nullptr || !player->shootPressedThisFrame)
-    {
-        return false;
-    }
-
-    // Only three player-created shots can exist at once, including reflected
-    // ones, and mashing Enter still has to wait for the cooldown.
-    const bool shotLimitReached = mPlayerShots.size() >= MaxPlayerShots;
-    const bool shotDelayActive = mPlayerShotCooldown > 0.0f;
-    if (shotLimitReached || shotDelayActive)
-    {
-        player->shootPressedThisFrame = false;
-        return false;
-    }
-
-    mPlayerShotCooldown = PlayerShotDelay;
-    mPlayerShootPoseTimer = PlayerShootPoseSeconds;
-    player->weaponIsHoldingShootPose = true;
-    return true;
 }
 
 void PlayState::spawnPlayerShot()
@@ -688,8 +430,7 @@ void PlayState::spawnPlayerShot()
     const bool right = player->isFacingRight();
     EnergyShot shot;
     shot.radius = 7.0f;
-    shot.position = player->getPosSafe() + cannonOffsetFor(*player);
-    shot.position.y -= shot.radius * 2.0f;
+    shot.position = player->getShotSpawnPosition(shot.radius);
     shot.velocity = { right ? PlayerShotSpeed : -PlayerShotSpeed, 0.0f };
     shot.fromPlayer = true;
     shot.color = sf::Color(90, 235, 255);
@@ -903,7 +644,7 @@ void PlayState::updatePlayerShots(float dt)
             const Physics::Box playerBox = makeBox(player->getPosSafe(), player->getSizeSafe());
             if (boxesOverlap(shotBox, playerBox))
             {
-                damagePlayer(EnemyShotDamage);
+                player->takeDamage(EnemyShotDamage);
                 shot.alive = false;
             }
         }
@@ -967,7 +708,7 @@ void PlayState::updateEnemyShots(float dt)
         const Physics::Box playerBox = makeBox(player->getPosSafe(), player->getSizeSafe());
         if (boxesOverlap(shotBox, playerBox))
         {
-            damagePlayer(EnemyShotDamage);
+            player->takeDamage(EnemyShotDamage);
             shot.alive = false;
         }
     }
@@ -1004,7 +745,7 @@ eStateID PlayState::updateImpl(float dt)
 
     // 2. Turn keyboard state into player intentions and copy velocity.
     handleStaticInputImpl(dt);
-    updateCombatTimers(dt);
+    player->updateCombatTimers(dt);
 
     if (player->jumpPressedThisFrame && wasGrounded)
     {
@@ -1027,9 +768,10 @@ eStateID PlayState::updateImpl(float dt)
 
     // 5. Choose the animation from the resolved movement state, advance the pose,
     // then commit copy -> live for rendering.
-    const bool shouldSpawnPlayerShot = tryStartPlayerShot();
+    const bool shouldSpawnPlayerShot = player->tryStartShot(mPlayerShots.size(), MaxPlayerShots);
     const ActionIntent intent = buildPlayerIntent(*player);
-    const EntityAction jumpAction = updateJumpAnimationPhase(*player, wasGrounded, dt);
+    const PlayerJumpAnimPhase jumpPhase = player->updateJumpAnimationPhase(wasGrounded, dt, JumpVelocity, GravityPerFrame);
+    const EntityAction jumpAction = actionFromJumpPhase(jumpPhase);
     const ActionContext context = buildPlayerContext(*player, jumpAction);
     mActMgr.update(*player, intent, context);
     player->updateAnimation(dt);

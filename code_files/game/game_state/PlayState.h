@@ -40,15 +40,6 @@ public:
         float hitFlashTimer{ 0.0f };
     };
 
-    struct DamagePop
-    {
-        sf::Vector2f position{};
-        sf::Vector2f velocity{};
-        int amount{ 0 };
-        float timer{ 0.0f };
-        float lifetime{ 0.75f };
-    };
-
     struct HealthPickup
     {
         sf::Vector2f position{};
@@ -68,24 +59,15 @@ private:
     std::vector<EnergyShot> mPlayerShots{};
     std::vector<EnergyShot> mEnemyShots{};
     std::vector<GuardEnemy> mEnemies{};
-    std::vector<DamagePop> mDamagePops{};
     std::vector<HealthPickup> mHealthPickups{};
-    float mPlayerShotCooldown{ 0.0f };
-    float mPlayerShootPoseTimer{ 0.0f };
-    float mPlayerInvincibleTimer{ 0.0f };
-    float mPlayerHitFlashTimer{ 0.0f };
 
     void resetCombatState();
-    void updateCombatTimers(float dt);
-    bool tryStartPlayerShot();
     void spawnPlayerShot();
     void updateEnemies(float dt);
     void updatePlayerShots(float dt);
     void updateEnemyShots(float dt);
     void spawnHealthPickup(sf::Vector2f position);
     void updateHealthPickups(float dt);
-    bool damagePlayer(int damage);
-    void spawnHealthDamagePop(int damage);
     void renderCombat(sf::RenderWindow& window);
     void renderPlayerHealth(sf::RenderWindow& window);
 

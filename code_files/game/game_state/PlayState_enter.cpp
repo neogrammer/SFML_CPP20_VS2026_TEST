@@ -5,17 +5,11 @@ void PlayState::resetCombatState()
     mPlayerShots.clear();
     mEnemyShots.clear();
     mEnemies.clear();
-    mDamagePops.clear();
     mHealthPickups.clear();
-    mPlayerShotCooldown = 0.0f;
-    mPlayerShootPoseTimer = 0.0f;
-    mPlayerInvincibleTimer = 0.0f;
-    mPlayerHitFlashTimer = 0.0f;
 
     if (player != nullptr)
     {
-        player->health = player->maxHealth;
-        player->weaponIsHoldingShootPose = false;
+        player->resetCombatState();
     }
 
     GuardEnemy enemy;

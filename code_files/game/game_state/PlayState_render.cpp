@@ -106,7 +106,7 @@ void PlayState::renderPlayerHealth(sf::RenderWindow& window)
         window.draw(segment);
     }
 
-    for (const DamagePop& pop : mDamagePops)
+    for (const Player::DamagePop& pop : player->getDamagePops())
     {
         float fade = pop.timer / pop.lifetime;
         if (fade < 0.0f)
@@ -156,17 +156,12 @@ void PlayState::renderImpl(sf::RenderWindow& window)
     window.draw(mParallaxBG);
     tmap->renderMap(window);
 
-    const bool playerBlinkOff =
-        mPlayerInvincibleTimer > 0.0f &&
-        mPlayerHitFlashTimer <= 0.0f &&
-        (static_cast<int>(mPlayerInvincibleTimer / 0.08f) % 2 == 0);
-
-    if (!playerBlinkOff)
+    if (!player->shouldBlinkOff())
     {
         window.draw(*player->sprite());
     }
 
-    if (mPlayerHitFlashTimer > 0.0f)
+    if (player->isHitFlashActive())
     {
         sf::RectangleShape playerFlash;
         playerFlash.setPosition(player->getPosSafe());
