@@ -171,6 +171,9 @@
     <ClCompile Include="code_files\game\game_objects\Player.cpp">
       <Filter>code_files\game\objects</Filter>
     </ClCompile>
+    <ClCompile Include="code_files\game\game_objects\CombatEntities.cpp">
+      <Filter>code_files\game\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\bubbly.ttf">
@@ -269,6 +272,9 @@
       <Filter>Headers\done</Filter>
     </ClInclude>
     <ClInclude Include="code_files\game\game_objects\Player.h">
+      <Filter>code_files\game\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_objects\CombatEntities.h">
       <Filter>code_files\game\objects</Filter>
     </ClInclude>
   </ItemGroup>

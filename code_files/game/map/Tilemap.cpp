@@ -157,8 +157,44 @@ void Tilemap::renderMap(sf::RenderWindow& wnd_)
 	}
 }
 
+void Tilemap::renderScreen(sf::RenderWindow& wnd_, const sf::View& view)
+{
+	const sf::Vector2f center = view.getCenter();
+	const sf::Vector2f size = view.getSize();
+	const float left = center.x - (size.x * 0.5f);
+	const float top = center.y - (size.y * 0.5f);
+	const float right = center.x + (size.x * 0.5f);
+	const float bottom = center.y + (size.y * 0.5f);
+
+	for (Tile& tile : mTmap)
+	{
+		if (tile.blank)
+		{
+			continue;
+		}
+
+		const sf::Vector2f tilePos = tile.getPosSafe();
+		const sf::Vector2f tileSize = tile.getSizeSafe();
+		const bool visible =
+			tilePos.x < right &&
+			tilePos.x + tileSize.x > left &&
+			tilePos.y < bottom &&
+			tilePos.y + tileSize.y > top;
+
+		if (visible)
+		{
+			wnd_.draw(*tile.sprite());
+		}
+	}
+}
+
 
 std::vector<GObj*>& Tilemap::getSolids()
+{
+	return solids;
+}
+
+const std::vector<GObj*>& Tilemap::getSolids() const
 {
 	return solids;
 }

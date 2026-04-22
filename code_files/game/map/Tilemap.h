@@ -61,8 +61,10 @@ public:
 	sf::Vector2f getTileSize();
 
 	void renderMap(sf::RenderWindow& wnd_);
+	void renderScreen(sf::RenderWindow& wnd_, const sf::View& view);
 
 	std::vector<GObj*>& getSolids();
+	const std::vector<GObj*>& getSolids() const;
 
 	
 

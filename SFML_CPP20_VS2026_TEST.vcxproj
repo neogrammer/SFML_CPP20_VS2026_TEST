@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="code_files\game\Component.cpp" />
     <ClCompile Include="code_files\game\game_objects\AnimObj.cpp" />
+    <ClCompile Include="code_files\game\game_objects\CombatEntities.cpp" />
     <ClCompile Include="code_files\game\game_objects\Player.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_enter.cpp" />
     <ClCompile Include="code_files\game\game_state\PlayState_handleKeyEvents.cpp" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="code_files\game\Component.h" />
     <ClInclude Include="code_files\game\game_objects\AnimObj.h" />
+    <ClInclude Include="code_files\game\game_objects\CombatEntities.h" />
     <ClInclude Include="code_files\game\game_objects\Player.h" />
     <ClInclude Include="code_files\game\game_state\PlayState.h" />
     <ClInclude Include="code_files\game\game_state\SplashState.h" />

@@ -12,13 +12,13 @@ void PlayState::resetCombatState()
         player->resetCombatState();
     }
 
-    GuardEnemy enemy;
-    enemy.patrolLeftX = 960.0f;
-    enemy.patrolRightX = 1450.0f;
-    enemy.position = { 1280.0f, 832.0f - enemy.standingSize.y };
-    enemy.facingRight = false;
-    enemy.shotTimer = 1.0f;
-    mEnemies.emplace_back(enemy);
+    mEnemies.emplace_back(GuardEnemy::makePatroller(
+        { 1280.0f, 832.0f - 96.0f },
+        960.0f,
+        1450.0f,
+        false,
+        1.0f
+    ));
 }
 
 void PlayState::enterImpl() {

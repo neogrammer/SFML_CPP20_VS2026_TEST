@@ -5,82 +5,72 @@
 
 namespace
 {
-    sf::Vector2f renderedEnemySize(const PlayState::GuardEnemy& enemy)
+    template <typename Entity>
+    void drawEntityContainer(sf::RenderWindow& window, const std::vector<Entity>& entities)
     {
-        return enemy.guarding ? enemy.guardingSize : enemy.standingSize;
+        for (const Entity& entity : entities)
+        {
+            entity.render(window);
+        }
     }
 }
 
-void PlayState::renderCombat(sf::RenderWindow& window)
+void PlayState::updateCameraForPlayer()
 {
-    for (const GuardEnemy& enemy : mEnemies)
-    {
-        if (!enemy.alive)
-        {
-            continue;
-        }
-
-        sf::RectangleShape body;
-        body.setPosition(enemy.position);
-        body.setSize(renderedEnemySize(enemy));
-        const bool flashing = enemy.hitFlashTimer > 0.0f;
-        body.setFillColor(flashing ? sf::Color::White : (enemy.guarding ? sf::Color(180, 20, 20) : sf::Color(235, 35, 35)));
-        body.setOutlineColor(flashing ? sf::Color::White : (enemy.guarding ? sf::Color(255, 230, 60) : sf::Color(70, 0, 0)));
-        body.setOutlineThickness(3.0f);
-        window.draw(body);
-
-        sf::RectangleShape eye;
-        eye.setSize({ 9.0f, 9.0f });
-        eye.setFillColor(sf::Color::White);
-        eye.setPosition({
-            enemy.position.x + (enemy.facingRight ? renderedEnemySize(enemy).x - 18.0f : 9.0f),
-            enemy.position.y + 18.0f
-        });
-        window.draw(eye);
-    }
-
-    for (const HealthPickup& pickup : mHealthPickups)
-    {
-        if (!pickup.alive)
-        {
-            continue;
-        }
-
-        sf::CircleShape orb{ pickup.radius, 28 };
-        orb.setPosition({ pickup.position.x - pickup.radius, pickup.position.y - pickup.radius });
-        orb.setFillColor(sf::Color(255, 220, 40));
-        orb.setOutlineColor(sf::Color(255, 255, 210));
-        orb.setOutlineThickness(3.0f);
-        window.draw(orb);
-
-        sf::CircleShape shine{ pickup.radius * 0.35f, 16 };
-        shine.setPosition({
-            pickup.position.x - (pickup.radius * 0.55f),
-            pickup.position.y - (pickup.radius * 0.65f)
-        });
-        shine.setFillColor(sf::Color(255, 255, 255, 170));
-        window.draw(shine);
-    }
-
-    auto drawShot = [&window](const EnergyShot& shot)
-    {
-        sf::CircleShape circle{ shot.radius, 20 };
-        circle.setPosition({ shot.position.x - shot.radius, shot.position.y - shot.radius });
-        circle.setFillColor(shot.color);
-        circle.setOutlineColor(sf::Color::White);
-        circle.setOutlineThickness(1.0f);
-        window.draw(circle);
+    const sf::Vector2f playerCenter{
+        player->getPosSafe().x + (player->getSizeSafe().x * 0.5f),
+        player->getPosSafe().y + (player->getSizeSafe().y * 0.5f)
     };
 
-    for (const EnergyShot& shot : mPlayerShots)
+    sf::Vector2f viewCenter = mainView.getCenter();
+    if (playerCenter.x > viewCenter.x)
     {
-        drawShot(shot);
+        viewCenter.x = playerCenter.x;
+        mainView.setCenter(viewCenter);
+        mParallaxBG.update(mainView);
+    }
+}
+
+void PlayState::renderWorldEntities(sf::RenderWindow& window)
+{
+    drawEntityContainer(window, mEnemies);
+    drawEntityContainer(window, mHealthPickups);
+    drawEntityContainer(window, mPlayerShots);
+    drawEntityContainer(window, mEnemyShots);
+}
+
+void PlayState::renderPlayer(sf::RenderWindow& window)
+{
+    if (!player->shouldBlinkOff())
+    {
+        window.draw(*player->sprite());
+    }
+}
+
+void PlayState::renderForegroundEffects(sf::RenderWindow& window)
+{
+    if (player->isHitFlashActive())
+    {
+        sf::RectangleShape playerFlash;
+        playerFlash.setPosition(player->getPosSafe());
+        playerFlash.setSize(player->getSizeSafe());
+        playerFlash.setFillColor(sf::Color(255, 255, 255, 210));
+        window.draw(playerFlash);
     }
 
-    for (const EnergyShot& shot : mEnemyShots)
-    {
-        drawShot(shot);
-    }
+    sf::RectangleShape playerBounds;
+    playerBounds.setFillColor(sf::Color::Transparent);
+    playerBounds.setOutlineColor(sf::Color(255, 0, 0, 190));
+    playerBounds.setOutlineThickness(2.0f);
+    playerBounds.setPosition(player->getPosSafe());
+    playerBounds.setSize(player->getSizeSafe());
+    window.draw(playerBounds);
+}
+
+void PlayState::renderGameplayUI(sf::RenderWindow& window)
+{
+    window.setView(window.getDefaultView());
+    renderPlayerHealth(window);
 }
 
 void PlayState::renderPlayerHealth(sf::RenderWindow& window)
@@ -136,51 +126,14 @@ void PlayState::renderImpl(sf::RenderWindow& window)
         return;
     }
 
-    const sf::Vector2f playerCenter{
-        player->getPosSafe().x + (player->getSizeSafe().x * 0.5f),
-        player->getPosSafe().y + (player->getSizeSafe().y * 0.5f)
-    };
-
-    // The camera only advances to the right. Once the player crosses the
-    // current view center, the view locks its x center to the player center.
-    sf::Vector2f viewCenter = mainView.getCenter();
-    if (playerCenter.x > viewCenter.x)
-    {
-        viewCenter.x = playerCenter.x;
-        mainView.setCenter(viewCenter);
-        mParallaxBG.update(mainView);
-    }
+    updateCameraForPlayer();
 
     window.setView(mainView);
-
     window.draw(mParallaxBG);
-    tmap->renderMap(window);
+    tmap->renderScreen(window, mainView);
 
-    if (!player->shouldBlinkOff())
-    {
-        window.draw(*player->sprite());
-    }
-
-    if (player->isHitFlashActive())
-    {
-        sf::RectangleShape playerFlash;
-        playerFlash.setPosition(player->getPosSafe());
-        playerFlash.setSize(player->getSizeSafe());
-        playerFlash.setFillColor(sf::Color(255, 255, 255, 210));
-        window.draw(playerFlash);
-    }
-
-    sf::RectangleShape playerBounds;
-    playerBounds.setFillColor(sf::Color::Transparent);
-    playerBounds.setOutlineColor(sf::Color(255, 0, 0, 190));
-    playerBounds.setOutlineThickness(2.0f);
-    playerBounds.setPosition(player->getPosSafe());
-    playerBounds.setSize(player->getSizeSafe());
-
-    window.draw(playerBounds);
-
-    renderCombat(window);
-
-    window.setView(window.getDefaultView());
-    renderPlayerHealth(window);
+    renderWorldEntities(window);
+    renderPlayer(window);
+    renderForegroundEffects(window);
+    renderGameplayUI(window);
 }
