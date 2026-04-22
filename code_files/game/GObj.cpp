@@ -213,6 +213,35 @@ void GObj::move(sf::Vector2f amt_)
     position += amt_;
 }
 
+void GObj::syncCopyFromLive()
+{
+    if (copy == nullptr)
+    {
+        return;
+    }
+
+    // The live object is the committed state from the last frame.
+    // The copy object is the scratch state for this frame's input,
+    // movement, collision, and animation decisions.
+    copy->texID = texID;
+    copy->texRect = texRect;
+    copy->velocity = velocity;
+    copy->acceleration = { 0.f, 0.f };
+    copy->position = position;
+    copy->offset = offset;
+    copy->size = size;
+    copy->facingRight = facingRight;
+    copy->uniDirectional = uniDirectional;
+    copy->grounded = grounded;
+    copy->justLeftGround = false;
+    copy->justLanded = false;
+
+    for (GObj*& touching : copy->contact)
+    {
+        touching = nullptr;
+    }
+}
+
 bool GObj::isFacingRight()
 {
     if (uniDirectional) return true;
@@ -279,6 +308,14 @@ void GObj::setCopyPos(float dt_)
 {
     copy->position = this->position + copy->velocity * dt_;
 }
+bool GObj::hasJustLanded()
+{
+    return justLanded;
+}
+void GObj::setJustLanded(bool cond_)
+{
+    justLanded = cond_;
+}
 void GObj::swapdate()
 {
     this->acceleration = copy->acceleration;
@@ -286,6 +323,8 @@ void GObj::swapdate()
     this->velocity = copy->velocity;
     this->position = copy->position;
     this->grounded = copy->grounded;
+    this->justLeftGround = copy->justLeftGround;
+    this->justLanded = copy->justLanded;
 
     this->setFacingRight(copy->isFacingRight());
 }

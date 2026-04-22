@@ -2,23 +2,38 @@
 
 void PlayState::renderImpl(sf::RenderWindow& window)
 {
+    if (player == nullptr || tmap == nullptr)
+    {
+        return;
+    }
 
+    const sf::Vector2f playerCenter{
+        player->getPosSafe().x + (player->getSizeSafe().x * 0.5f),
+        player->getPosSafe().y + (player->getSizeSafe().y * 0.5f)
+    };
 
+    // The camera only advances to the right. Once the player crosses the
+    // current view center, the view locks its x center to the player center.
+    sf::Vector2f viewCenter = mainView.getCenter();
+    if (playerCenter.x > viewCenter.x)
+    {
+        viewCenter.x = playerCenter.x;
+        mainView.setCenter(viewCenter);
+        mParallaxBG.update(mainView);
+    }
 
+    window.setView(mainView);
 
-	static float prevCenterX{ 0.f };
-	auto centerX = gameObject->getPos().x + (gameObject->getSize().x / 2.f);
-	if (window.mapCoordsToPixel({ centerX,0.f }).x > 800 && gameObject->isFacingRight() && centerX > prevCenterX)
-	{
-		mainView.setCenter({ centerX, 450.f });
-		mParallaxBG.update(mainView);
-	}
-	prevCenterX = centerX;
-	window.setView(mainView);
+    window.draw(mParallaxBG);
+    tmap->renderMap(window);
+    window.draw(*player->sprite());
 
-	window.draw(mParallaxBG);
+    sf::RectangleShape playerBounds;
+    playerBounds.setFillColor(sf::Color::Transparent);
+    playerBounds.setOutlineColor(sf::Color(255, 0, 0, 190));
+    playerBounds.setOutlineThickness(2.0f);
+    playerBounds.setPosition(player->getPosSafe());
+    playerBounds.setSize(player->getSizeSafe());
 
-	tmap->renderMap(window);
-
-	window.draw(*gameObject->sprite());
+    window.draw(playerBounds);
 }

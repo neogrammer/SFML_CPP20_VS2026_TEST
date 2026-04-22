@@ -1,6 +1,7 @@
 #include "Physics.h"
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 float Physics::Box::right() const
 {
@@ -40,6 +41,35 @@ bool Physics::isOverlapping(const GObj* first, const GObj* second)
     }
 
     return boxesOverlap(getBox(first), getBox(second));
+}
+
+bool Physics::overlapsAnyAt(
+    const GObj* first,
+    const std::vector<GObj*>& others,
+    const sf::Vector2f& testPos
+)
+{
+    if (first == nullptr)
+    {
+        return false;
+    }
+
+    const Box firstBox = buildBoxFromPositionAndSize(testPos, first->getSizeSafe());
+
+    for (GObj* other : others)
+    {
+        if (other == nullptr || other == first)
+        {
+            continue;
+        }
+
+        if (boxesOverlap(firstBox, getBox(other)))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -140,18 +170,6 @@ bool Physics::moveFirstOutsideVector(
     const sf::Vector2f firstStartPos = moverState->getPosSafe();
     const sf::Vector2f firstStartVel = moverState->getVelSafe();
     const sf::Vector2f firstSize = moverState->getSizeSafe();
-    const Box firstStartBox = buildBoxFromPositionAndSize(firstStartPos, firstSize);
-
-    std::sort(
-        sorted.begin(),
-        sorted.end(),
-        [&](const GObj* a, const GObj* b)
-        {
-            const float distA = getDistanceSqBetweenCenters(firstStartBox, getBox(a));
-            const float distB = getDistanceSqBetweenCenters(firstStartBox, getBox(b));
-            return distA < distB;
-        }
-    );
 
     if (maxPasses < 1)
     {
@@ -165,11 +183,13 @@ bool Physics::moveFirstOutsideVector(
 
     for (int pass = 0; pass < maxPasses; ++pass)
     {
-        bool movedThisPass = false;
+        const Box moverBox = buildBoxFromPositionAndSize(workingPos, firstSize);
+        GObj* closestOverlap = nullptr;
+        Box closestBox{};
+        float closestDistanceSq = 0.0f;
 
         for (GObj* other : sorted)
         {
-            const Box moverBox = buildBoxFromPositionAndSize(workingPos, firstSize);
             const Box blockerBox = getBox(other); // blocker stays on current/live state
 
             if (!boxesOverlap(moverBox, blockerBox))
@@ -177,35 +197,46 @@ bool Physics::moveFirstOutsideVector(
                 continue;
             }
 
-            bool resolvedOnX = false;
-            const sf::Vector2f separation = getSeparationVector(moverBox, blockerBox, resolvedOnX);
-
-            workingPos += separation;
-
-            if (zeroVelocityOnResolvedAxis)
+            const float distanceSq = getDistanceSqBetweenCenters(moverBox, blockerBox);
+            if (closestOverlap == nullptr || distanceSq < closestDistanceSq)
             {
-                if (resolvedOnX)
-                {
-                    workingVel.x = 0.f;
-                }
-                else
-                {
-                    workingVel.y = 0.f;
-                    //if (separation.y < 0.f)
-                    //{
-                    //    first->grounded = true;
-                    //}
-                }
+                closestOverlap = other;
+                closestBox = blockerBox;
+                closestDistanceSq = distanceSq;
             }
-
-            movedAnything = true;
-            movedThisPass = true;
         }
 
-        if (!movedThisPass)
+        if (closestOverlap == nullptr)
         {
             break;
         }
+
+        // Resolve exactly one currently-overlapping blocker, then start the
+        // scan again from the new working position. This keeps old overlaps
+        // from being resolved after a previous push already moved us clear.
+        bool resolvedOnX = false;
+        const sf::Vector2f separation = getSeparationVector(moverBox, closestBox, resolvedOnX);
+
+        workingPos += separation;
+
+        if (zeroVelocityOnResolvedAxis)
+        {
+            if (resolvedOnX)
+            {
+                workingVel.x = 0.f;
+            }
+            else
+            {
+                workingVel.y = 0.f;
+                if (separation.y < 0.f)
+                {
+                    GObj* writableState = (first->copy != nullptr) ? first->copy : first;
+                    writableState->grounded = true;
+                }
+            }
+        }
+
+        movedAnything = true;
     }
 
     if (!movedAnything)
@@ -377,19 +408,47 @@ bool Physics::RayVsRect(const sf::Vector2f& ray_origin, const sf::Vector2f& ray_
     contact_normal = { 0,0 };
     contact_point = { 0,0 };
 
-    // Cache division
-    sf::Vector2f invdir = { 1.0f / ray_dir.x, 1.0f / ray_dir.y };
+    const float inf = std::numeric_limits<float>::infinity();
 
-    // Calculate intersections with rectangle bounding axes
-    sf::Vector2f t_near = { (target->position.x - ray_origin.x) * invdir.x, (target->position.y - ray_origin.y) * invdir.y};
-    sf::Vector2f t_far = { (target->position.x + target->size.x - ray_origin.x) * invdir.x, (target->position.y + target->size.y - ray_origin.y) * invdir.y };
+    auto getAxisTimes = [inf](float origin, float direction, float min, float max, float& nearTime, float& farTime)
+    {
+        constexpr float axisEpsilon = 0.000001f;
 
-    if (std::isnan(t_far.y) || std::isnan(t_far.x)) return false;
-    if (std::isnan(t_near.y) || std::isnan(t_near.x)) return false;
+        if (std::fabs(direction) <= axisEpsilon)
+        {
+            if (origin <= min + axisEpsilon || origin >= max - axisEpsilon)
+            {
+                return false;
+            }
 
-    // Sort distances
-    if (t_near.x > t_far.x) std::swap(t_near.x, t_far.x);
-    if (t_near.y > t_far.y) std::swap(t_near.y, t_far.y);
+            nearTime = -inf;
+            farTime = inf;
+            return true;
+        }
+
+        nearTime = (min - origin) / direction;
+        farTime = (max - origin) / direction;
+
+        if (nearTime > farTime)
+        {
+            std::swap(nearTime, farTime);
+        }
+
+        return true;
+    };
+
+    sf::Vector2f t_near{};
+    sf::Vector2f t_far{};
+
+    if (!getAxisTimes(ray_origin.x, ray_dir.x, target->position.x, target->position.x + target->size.x, t_near.x, t_far.x))
+    {
+        return false;
+    }
+
+    if (!getAxisTimes(ray_origin.y, ray_dir.y, target->position.y, target->position.y + target->size.y, t_near.y, t_far.y))
+    {
+        return false;
+    }
 
     // Early rejection		
     if (t_near.x > t_far.y || t_near.y > t_far.x) return false;
@@ -408,12 +467,12 @@ bool Physics::RayVsRect(const sf::Vector2f& ray_origin, const sf::Vector2f& ray_
     contact_point = { ray_origin.x + t_hit_near * ray_dir.x,  ray_origin.y + t_hit_near * ray_dir.y };
 
     if (t_near.x > t_near.y)
-        if (invdir.x < 0)
+        if (ray_dir.x < 0)
             contact_normal = { 1, 0 };
         else
             contact_normal = { -1, 0 };
     else if (t_near.x < t_near.y)
-        if (invdir.y < 0)
+        if (ray_dir.y < 0)
             contact_normal = { 0, 1 };
         else
             contact_normal = { 0, -1 };
@@ -428,38 +487,79 @@ bool Physics::RayVsRect(const sf::Vector2f& ray_origin, const sf::Vector2f& ray_
 
 bool Physics::DynamicRectVsRect(const GObj* r_dynamic, const float fTimeStep, GObj& r_static, sf::Vector2f& contact_point, sf::Vector2f& contact_normal, float& contact_time)
 {
-    // Check if dynamic rectangle is actually moving - we assume rectangles are NOT in collision to start
-    if (r_dynamic->velocity.x == 0 && r_dynamic->velocity.y == 0)
+    if (r_dynamic == nullptr)
+    {
+        return false;
+    }
+
+    const sf::Vector2f velocity = r_dynamic->velocity;
+
+    // Check if dynamic rectangle is actually moving - we assume rectangles are NOT in collision to start.
+    if (velocity.x == 0.f && velocity.y == 0.f)
         return false;
 
-    // Expand target rectangle by source dimensions
-    GObj expanded_target{ r_static.getTexID(), r_static.getRect(), r_static.isUniDirectional(), {r_static.position.x - r_dynamic->size.x / 2.f,r_static.position.y - r_dynamic->size.y / 2.f}, {r_static.size + r_dynamic->size}, {  r_static.getOffset().x + r_dynamic->size.x / 2.f, r_static.getOffset().y + r_dynamic->size.y / 2.f} };
-    //expanded_target.pos = r_static.pos - r_dynamic->size / 2;
-    //expanded_target.size = r_static.size + r_dynamic->size;
+    // Swept AABB works by expanding the static box by half of the moving box,
+    // then casting the moving box CENTER through that expanded box.
+    // Casting from an edge while also expanding by half-size shifts horizontal
+    // hits by half the player width.
+    GObj expanded_target{
+        r_static.getTexID(),
+        r_static.getRect(),
+        r_static.isUniDirectional(),
+        {
+            r_static.position.x - (r_dynamic->size.x * 0.5f),
+            r_static.position.y - (r_dynamic->size.y * 0.5f)
+        },
+        {
+            r_static.size.x + r_dynamic->size.x,
+            r_static.size.y + r_dynamic->size.y
+        },
+        { 0.f, 0.f }
+    };
 
-    if (RayVsRect({ r_dynamic->position.x + (r_dynamic->size.x / 2.f), r_dynamic->position.y + (r_dynamic->size.y / 2.f) }, { r_dynamic->velocity.x * fTimeStep, r_dynamic->velocity.y * fTimeStep }, &expanded_target, contact_point, contact_normal, contact_time))
-        return (contact_time >= 0.0f && contact_time < 1.0f);
-    else
+    const sf::Vector2f dynamicCenter{
+        r_dynamic->position.x + (r_dynamic->size.x * 0.5f),
+        r_dynamic->position.y + (r_dynamic->size.y * 0.5f)
+    };
+
+    const sf::Vector2f rayStep{
+        velocity.x * fTimeStep,
+        velocity.y * fTimeStep
+    };
+
+    if (!RayVsRect(dynamicCenter, rayStep, &expanded_target, contact_point, contact_normal, contact_time))
+    {
         return false;
+    }
+
+    return (contact_time >= 0.0f && contact_time <= 1.0f);
 }
 
 bool Physics::ResolveDynamicRectVsRect(GObj* r_dynamic, const float fTimeStep, GObj* r_static)
 {
+    if (r_dynamic == nullptr || r_static == nullptr)
+    {
+        return false;
+    }
+
     sf::Vector2f contact_point, contact_normal;
     float contact_time = 0.0f;
     
     if (DynamicRectVsRect(r_dynamic, fTimeStep, *r_static, contact_point, contact_normal, contact_time))
     {
-        if (contact_normal.y > 0) r_dynamic->contact[0] = r_static; else nullptr;
-        if (contact_normal.x < 0) r_dynamic->contact[1] = r_static; else nullptr;
-        if (contact_normal.y < 0) r_dynamic->contact[2] = r_static; else nullptr;
-        if (contact_normal.x > 0) r_dynamic->contact[3] = r_static; else nullptr;
+        if (contact_normal.y > 0) r_dynamic->contact[0] = r_static;
+        if (contact_normal.x < 0) r_dynamic->contact[1] = r_static;
+        if (contact_normal.y < 0) r_dynamic->contact[2] = r_static;
+        if (contact_normal.x > 0) r_dynamic->contact[3] = r_static;
 
         r_dynamic->velocity.x = r_dynamic->velocity.x + contact_normal.x * std::abs(r_dynamic->velocity.x) * (1 - contact_time);
         r_dynamic->velocity.y = r_dynamic->velocity.y + contact_normal.y * std::abs(r_dynamic->velocity.y) * (1 - contact_time);
 
         if (contact_normal.y < 0)
+        {
+            r_dynamic->setJustLanded(true);
             r_dynamic->grounded = true;
+        }
 
         return true;
     }

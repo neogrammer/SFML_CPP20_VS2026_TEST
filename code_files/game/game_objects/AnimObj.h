@@ -51,6 +51,7 @@ enum class AnimName
 
 class AnimObj : public GObj
 {
+	friend class Player;
 	void setBase();
 	void setCopyBase();
 
@@ -87,16 +88,19 @@ public:
 
 	void loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_, std::unordered_set<AnimName>& nameID_, AnimName startAnim, std::unordered_map<AnimName, sf::Vector2f>& frameSizes_, std::unordered_map<AnimName, std::vector<sf::Vector2f>>& offsets_, std::unordered_map<AnimName, std::vector<sf::Vector2f>>& sizes_, std::unordered_map<AnimName, std::vector<float>>& delays_, std::unordered_map<AnimName, uint32_t>& startCols_, std::unordered_map<AnimName, sf::Vector2f> startPxls_, std::unordered_map<AnimName, sf::Vector2f> startPxlsLeft_, std::unordered_map<AnimName, uint32_t>& pitches_, std::unordered_map<AnimName, uint32_t>& numFrames_, sf::Vector2f position_ = { 0.f,0.f }, std::unordered_map<AnimName, bool> uniDirectionals_ = std::unordered_map<AnimName, bool>{}, std::unordered_map<AnimName, bool> loopWaits_ = std::unordered_map<AnimName, bool>{}, std::unordered_map<AnimName, float> loopDelays_ = std::unordered_map<AnimName, float>{}, std::unordered_map<AnimName, bool> loopings_ = std::unordered_map<AnimName, bool>{});
 
-	~AnimObj();
+	virtual ~AnimObj();
 
 	sf::IntRect getCurrentFrame();
 
 	virtual void update(float dt_) override;
+	void updatePhysics(float dt_);
+	void updateAnimation(float dt_);
 	virtual void swapdate() override;
 	void loadAnimations(const std::string& filename);
 	void animate(float dt);
 	void animBfrSwap();
 	AnimName getCurrentAnim();
+	bool isCurrentAnimationFinished() const;
 	void setCurrentAnim(AnimName anim);
 	void setCurrentIndex(int idx);
 

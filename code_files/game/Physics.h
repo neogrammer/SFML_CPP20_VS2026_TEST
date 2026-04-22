@@ -47,7 +47,7 @@ public:
         GObj* first,
         const std::vector<GObj*>& others,
         bool zeroVelocityOnResolvedAxis = true,
-        int maxPasses = 3
+        int maxPasses = 8
     );
 
 private:

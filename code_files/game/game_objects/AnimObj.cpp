@@ -194,7 +194,7 @@ void AnimObj::loadAnimation(AnimName nameID_, Cfg::Textures texID_, std::vector<
 }
 
 AnimObj::AnimObj(Cfg::Textures texID_, sf::IntRect texRect_, bool uniDirectional_, sf::Vector2f position_, sf::Vector2f size_, sf::Vector2f offset_, bool isCopy)
-	: GObj{ texID_, texRect_,uniDirectional_, position_, size_, offset_ }
+	: GObj{ texID_, texRect_,uniDirectional_, position_, size_, offset_, isCopy }
 {
 
 	if (!isCopy)
@@ -314,8 +314,8 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 
 
 		// Texture IntRects
-		// startPxl is where to start for that animation in the texture in the minimum top left of both x and y, then startCol is the start column of the mini sheet,
-		//  which stretches out map<AnimName,FrameSize> sizes * map<AnimName,uint8_t pitch from the startPxl
+		// startPxl is the first frame's actual top-left pixel in the atlas.
+		// After the first row, wrapping continues from x=0 on the next row.
 		//  This give you an inner sprite sheet, and you can have any dimensions and sizes you want, for giant texture atlases
 		float frWidth = frameSizes_.at(aname).x;
 		float frHeight = frameSizes_.at(aname).y;
@@ -345,10 +345,11 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			frame[0].clear();
 			frame[0].reserve(off.size());
 			uint32_t counter = 0Ui32;
-			for (int k = 0; k < (int)off.size() && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			(void)stCol;
+			for (int k = 0; k < (int)off.size() && stPxl.x + (k * frWidth) < pitch * frWidth; k++)
 			{
 
-				frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
 				counter++;
 			}
 			if (counter < numFrames)
@@ -357,7 +358,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counter < numFrames; k++)
 					{
-						frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frame[0].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counter++;
 					}
 				}
@@ -371,10 +372,10 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			frameCpy[0].clear();
 			frameCpy[0].reserve(off.size());
 			uint32_t counterCpy = 0Ui32;
-			for (int k = 0; k < (int)off.size() && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			for (int k = 0; k < (int)off.size() && stPxl.x + (k * frWidth) < pitch * frWidth; k++)
 			{
 
-				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
 				counterCpy++;
 			}
 			if (counterCpy < numFrames)
@@ -383,7 +384,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
 					{
-						frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frameCpy[0].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counterCpy++;
 					}
 				}
@@ -404,9 +405,10 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			frame[1].clear();
 			frame[1].reserve(off.size() / 2);
 			uint32_t counter = 0Ui32;
-			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			(void)stCol;
+			for (int k = 0; k < (int)off.size() / 2 && stPxl.x + (k * frWidth) < pitch * frWidth; k++)
 			{
-				frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
 				counter++;
 			}
 			if (counter < numFrames)
@@ -415,15 +417,15 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counter < numFrames; k++)
 					{
-						frame[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frame[0].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counter++;
 					}
 				}
 			}
 			counter = 0Ui32;
-			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxlLeft.x < stPxlLeft.x + (pitch * frWidth); k++)
+			for (int k = 0; k < (int)off.size() / 2 && stPxlLeft.x + (k * frWidth) < pitch * frWidth; k++)
 			{
-				frame[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k + stCol) * frWidth),(int)stPxlLeft.y}, {(int)frWidth,(int)frHeight} });
+				frame[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k * frWidth)),(int)stPxlLeft.y}, {(int)frWidth,(int)frHeight} });
 				counter++;
 			}
 			if (counter < numFrames)
@@ -432,7 +434,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counter < numFrames; k++)
 					{
-						frame[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k * frWidth)),(int)(stPxlLeft.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frame[1].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxlLeft.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counter++;
 					}
 				}
@@ -450,9 +452,9 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 			frameCpy[1].clear();
 			frameCpy[1].reserve(off.size() / 2);
 			uint32_t counterCpy = 0Ui32;
-			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxl.x < stPxl.x + (pitch * frWidth); k++)
+			for (int k = 0; k < (int)off.size() / 2 && stPxl.x + (k * frWidth) < pitch * frWidth; k++)
 			{
-				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k + stCol) * frWidth),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
+				frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)stPxl.y}, {(int)frWidth,(int)frHeight} });
 				counterCpy++;
 			}
 			if (counterCpy < numFrames)
@@ -461,15 +463,15 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
 					{
-						frameCpy[0].emplace_back(sf::IntRect{ {(int)(stPxl.x + (k * frWidth)),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frameCpy[0].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxl.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counterCpy++;
 					}
 				}
 			}
 			counterCpy = 0Ui32;
-			for (int k = 0; k < (int)off.size() / 2 && (k + stCol) * frWidth + stPxlLeft.x < stPxlLeft.x + (pitch * frWidth); k++)
+			for (int k = 0; k < (int)off.size() / 2 && stPxlLeft.x + (k * frWidth) < pitch * frWidth; k++)
 			{
-				frameCpy[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k + stCol) * frWidth),(int)stPxlLeft.y}, {(int)frWidth,(int)frHeight} });
+				frameCpy[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k * frWidth)),(int)stPxlLeft.y}, {(int)frWidth,(int)frHeight} });
 				counterCpy++;
 			}
 			if (counterCpy < numFrames)
@@ -478,7 +480,7 @@ void AnimObj::loadAnimations(std::unordered_map<AnimName, Cfg::Textures>& texID_
 				{
 					for (uint32_t k = 0; k < pitch && counterCpy < numFrames; k++)
 					{
-						frameCpy[1].emplace_back(sf::IntRect{ {(int)(stPxlLeft.x + (k * frWidth)),(int)(stPxlLeft.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
+						frameCpy[1].emplace_back(sf::IntRect{ {(int)(k * frWidth),(int)(stPxlLeft.y + (z * frHeight))}, {(int)frWidth,(int)frHeight} });
 						counterCpy++;
 					}
 				}
@@ -643,11 +645,24 @@ void AnimObj::update(float dt_)
 		throw std::runtime_error("anim obj copy not good!");
 	}
 	
-	// in this order double buffer
+	updatePhysics(dt_);
+	updateAnimation(dt_);
+
+}
+
+void AnimObj::updatePhysics(float dt_)
+{
+	// Only touches the copy/back buffer: velocity, acceleration, and other
+	// physics state are prepared here before collision commits the frame.
 	GObj::update(dt_);
+}
+
+void AnimObj::updateAnimation(float dt_)
+{
+	// Animation is intentionally late in the frame. Input and collision have
+	// already chosen the state, so this only advances the pose to render.
 	animate(dt_);
 	setCopyBase();
-
 }
 
 void AnimObj::swapdate()
@@ -655,6 +670,7 @@ void AnimObj::swapdate()
 	animBfrSwap();
 	GObj::swapdate();
 	setBase();
+	setJustLanded(copy->hasJustLanded());
 }
 
 // Assumes: AnimName and TextureID are enums (or constructible from int)
@@ -829,10 +845,21 @@ void AnimObj::animate(float dt)
 	{
 
 		c.animElapsed = 0.f;
-		c.currentIndex++;
-		if (c.currentIndex >= frames[c.currentAnim].at(currDir).size())
+		if (c.playing)
 		{
-			c.currentIndex = 0;
+			c.currentIndex++;
+			if (c.currentIndex >= frames[c.currentAnim].at(currDir).size())
+			{
+				if (looping[c.currentAnim])
+				{
+					c.currentIndex = 0;
+				}
+				else
+				{
+					c.currentIndex = (uint8_t)(frames[c.currentAnim].at(currDir).size() - 1);
+					c.playing = false;
+				}
+			}
 		}
 	}
 
@@ -856,6 +883,17 @@ void AnimObj::animBfrSwap()
 AnimName AnimObj::getCurrentAnim()
 {
 	return currentAnim;
+}
+
+bool AnimObj::isCurrentAnimationFinished() const
+{
+	auto found = looping.find(currentAnim);
+	if (found != looping.end() && found->second)
+	{
+		return false;
+	}
+
+	return !playing;
 }
 
 void AnimObj::setCurrentAnim(AnimName anim)

@@ -1,107 +1,47 @@
 #include "PlayState.h"
 
-void PlayState::handleStaticInputImpl(float dt, GObj* gameObject)
+namespace
 {
-    constexpr float bufferTime = { 0.03f };
-    static float bufferedLeft = 0.f;
-    static float bufferedRight = 0.f;
-    bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
-    bool a = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
-    bool space = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+    constexpr float RunVelocity = 500.0f;
+}
 
+void PlayState::handleStaticInputImpl(float dt)
+{
+    (void)dt;
 
-    if (d)
+    if (player == nullptr || player->copy == nullptr)
     {
-        bufferedRight += dt;
+        return;
+    }
+
+    const bool right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+    const bool left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+    const bool jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+
+    // Store raw intent on the player. Movement and animation both read these
+    // same flags, so controls, physics, and pose selection stay in agreement.
+    player->rightHeld = right;
+    player->leftHeld = left;
+
+    player->jumpPressedThisFrame = jump && !player->jumpHeld;
+    player->jumpHeld = jump;
+
+    sf::Vector2f velocity = player->copy->getVelSafe();
+
+    if (right == left)
+    {
+        velocity.x = 0.0f;
+    }
+    else if (right)
+    {
+        velocity.x = RunVelocity;
+        player->setFacingRightCpy(true);
     }
     else
     {
-        bufferedRight = 0.f;
+        velocity.x = -RunVelocity;
+        player->setFacingRightCpy(false);
     }
 
-    if (a)
-    {
-        bufferedLeft += dt;
-    }
-    else
-    {
-        bufferedLeft = 0.f;
-    }
-
-    gameObject->jumpPressedThisFrame = false;
-
-    if (space && !gameObject->jumpHeld)
-    {
-        gameObject->jumpHeld = true;
-        gameObject->jumpPressedThisFrame = true;
-    }
-    else if (!space)
-    {
-        gameObject->jumpHeld = false;
-    }
-
-    auto& c = *dynamic_cast<AnimObj*>(gameObject);
-    if (a || d)
-    {
-        if (a && d)
-        {
-            if (gameObject->copy->getVelocity().x < -0.001f)
-                gameObject->copy->setVel({ -500.f, gameObject->getVel().y });
-            else if (gameObject->copy->getVelocity().x > 0.001f)
-                gameObject->copy->setVel({ 500.f, gameObject->getVel().y });
-
-
-            if (gameObject->copy->getVelocity().x >= -0.001f && gameObject->copy->getVelocity().x <= 0.001f)
-            {
-                if (c.getCurrentAnim() != AnimName::Idle)
-                {
-                    c.setCurrentAnim(AnimName::Idle);
-                }
-            }
-            else
-            {
-                if (c.getCurrentAnim() != AnimName::Run)
-                {
-                    c.setCurrentAnim(AnimName::Run);
-                }
-            }
-
-        }
-        else
-        {
-            if (d && bufferedRight >= bufferTime)
-            {
-                gameObject->copy->setVel({ 500.f, gameObject->copy->getVel().y });
-                gameObject->setFacingRightCpy(true);
-                if (c.getCurrentAnim() != AnimName::Run)
-                {
-                    c.setCurrentAnim(AnimName::Run);
-                }
-
-            }
-            if (a && bufferedLeft >= bufferTime)
-            {
-
-                gameObject->copy->setVel({ -500.f, gameObject->copy->getVel().y });
-                gameObject->setFacingRightCpy(false);
-                if (c.getCurrentAnim() != AnimName::Run)
-                {
-                    c.setCurrentAnim(AnimName::Run);
-                }
-
-            }
-        }
-    }
-    else
-    {
-        if ((!d && !a))
-        {
-            gameObject->copy->setVel({ 0.f, gameObject->copy->getVel().y });
-
-            if (c.getCurrentAnim() != AnimName::Idle)
-            {
-                c.setCurrentAnim(AnimName::Idle);
-            }
-        }
-    }
+    player->copy->setVel(velocity);
 }

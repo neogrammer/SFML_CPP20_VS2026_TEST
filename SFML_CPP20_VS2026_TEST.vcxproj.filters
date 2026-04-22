@@ -88,6 +88,12 @@
     <Filter Include="assets\textures\backgrounds\bg0">
       <UniqueIdentifier>{233df0df-4e5f-4ffa-a757-9e11273ae3ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="code_files\game\objects">
+      <UniqueIdentifier>{5fb2f9f1-eddb-4f69-81dd-cd75accf70d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="code_files\game\objects\player">
+      <UniqueIdentifier>{cc08fc4f-2d44-46de-80ff-48ed899019f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code_files\third_party\imgui\imgui.cpp">
@@ -158,6 +164,12 @@
     </ClCompile>
     <ClCompile Include="code_files\game\Physics.cpp">
       <Filter>code_files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\io\PlayerAnimator.cpp">
+      <Filter>code_files\game\objects\player</Filter>
+    </ClCompile>
+    <ClCompile Include="code_files\game\game_objects\Player.cpp">
+      <Filter>code_files\game\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +264,12 @@
     </ClInclude>
     <ClInclude Include="code_files\game\Physics.h">
       <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\io\PlayerAnimator.h">
+      <Filter>Headers\done</Filter>
+    </ClInclude>
+    <ClInclude Include="code_files\game\game_objects\Player.h">
+      <Filter>code_files\game\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

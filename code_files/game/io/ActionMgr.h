@@ -45,6 +45,7 @@ public:
 class ActionContext
 {
 public:
+    EntityAction forcedAction{ EntityAction::None };
     sf::Vector2f velocity{ 0.f, 0.f };
 
     bool grounded{ false };

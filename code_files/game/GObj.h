@@ -24,6 +24,7 @@ protected:
 	bool facingRight{ true };
 	bool uniDirectional;
 	static sf::Texture defaultTex;
+	bool moveUp1{ false };
 
 public:
 
@@ -53,9 +54,11 @@ public:
 	const sf::Vector2f getPosSafe() const;
 	void move(sf::Vector2f amt_);
 	std::vector<std::shared_ptr<Component>> mComponents;
+	void syncCopyFromLive();
 	void setCopyPos(float dt_);
 	std::array<GObj*, 4> contact;
-
+	bool hasJustLanded();
+	void setJustLanded(bool cond_);
 	GObj* copy{ nullptr };
 	bool grounded{ false };
 	bool justLeftGround{ false };

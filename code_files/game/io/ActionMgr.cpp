@@ -96,6 +96,11 @@ EntityAction ActionMgr::resolveAction(const ActionIntent& intent, const ActionCo
         return EntityAction::WallSlide;
     }
 
+    if (context.forcedAction != EntityAction::None)
+    {
+        return context.forcedAction;
+    }
+
     if (context.justLanded)
     {
         return EntityAction::Landing;

@@ -9,7 +9,7 @@
 #include <memory>
 #include "../map/ParallaxBG.h"
 #include "../io/ActionMgr.h"
-
+#include <game_objects/Player.h>
 // A specific implementation
 class PlayState : public GameState<PlayState> {
 
@@ -18,13 +18,13 @@ class PlayState : public GameState<PlayState> {
     std::unique_ptr<Tilemap> tmap{};
     ParallaxBG mParallaxBG{ 8 };
     eStateID mPendingState{ eStateID::None };
-    GObj* gameObject{ nullptr };
+    Player* player{ nullptr };
 public:
     PlayState(sf::RenderWindow& wnd);
     eStateID updateImpl(float dt);
     void renderImpl(sf::RenderWindow& window); 
     void handleKeyEventInputImpl(sf::Keyboard::Key key, bool isPressed);
-    void handleStaticInputImpl(float dt, GObj* gameObject);
+    void handleStaticInputImpl(float dt);
     void enterImpl();
     void leaveImpl();
 
