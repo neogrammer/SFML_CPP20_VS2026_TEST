@@ -7,18 +7,88 @@
 #include <iostream>
 #include "../../game/map/Tilemap.h"
 #include <memory>
+#include <vector>
+#include <string>
 #include "../map/ParallaxBG.h"
 #include "../io/ActionMgr.h"
 #include <game_objects/Player.h>
 // A specific implementation
 class PlayState : public GameState<PlayState> {
+public:
+    struct EnergyShot
+    {
+        sf::Vector2f position{};
+        sf::Vector2f velocity{};
+        float radius{ 7.0f };
+        bool fromPlayer{ true };
+        bool alive{ true };
+        sf::Color color{ sf::Color::Cyan };
+    };
 
+    struct GuardEnemy
+    {
+        sf::Vector2f position{};
+        sf::Vector2f standingSize{ 64.0f, 96.0f };
+        sf::Vector2f guardingSize{ 64.0f, 68.0f };
+        float patrolLeftX{ 0.0f };
+        float patrolRightX{ 0.0f };
+        bool facingRight{ true };
+        bool guarding{ false };
+        bool alive{ true };
+        int health{ 6 };
+        float shotTimer{ 0.0f };
+        float hitFlashTimer{ 0.0f };
+    };
+
+    struct DamagePop
+    {
+        sf::Vector2f position{};
+        sf::Vector2f velocity{};
+        int amount{ 0 };
+        float timer{ 0.0f };
+        float lifetime{ 0.75f };
+    };
+
+    struct HealthPickup
+    {
+        sf::Vector2f position{};
+        sf::Vector2f velocity{};
+        float radius{ 14.0f };
+        bool alive{ true };
+        bool settled{ false };
+    };
+
+private:
     ActionMgr mActMgr{};
 
     std::unique_ptr<Tilemap> tmap{};
     ParallaxBG mParallaxBG{ 8 };
     eStateID mPendingState{ eStateID::None };
     Player* player{ nullptr };
+    std::vector<EnergyShot> mPlayerShots{};
+    std::vector<EnergyShot> mEnemyShots{};
+    std::vector<GuardEnemy> mEnemies{};
+    std::vector<DamagePop> mDamagePops{};
+    std::vector<HealthPickup> mHealthPickups{};
+    float mPlayerShotCooldown{ 0.0f };
+    float mPlayerShootPoseTimer{ 0.0f };
+    float mPlayerInvincibleTimer{ 0.0f };
+    float mPlayerHitFlashTimer{ 0.0f };
+
+    void resetCombatState();
+    void updateCombatTimers(float dt);
+    bool tryStartPlayerShot();
+    void spawnPlayerShot();
+    void updateEnemies(float dt);
+    void updatePlayerShots(float dt);
+    void updateEnemyShots(float dt);
+    void spawnHealthPickup(sf::Vector2f position);
+    void updateHealthPickups(float dt);
+    bool damagePlayer(int damage);
+    void spawnHealthDamagePop(int damage);
+    void renderCombat(sf::RenderWindow& window);
+    void renderPlayerHealth(sf::RenderWindow& window);
+
 public:
     PlayState(sf::RenderWindow& wnd);
     eStateID updateImpl(float dt);

@@ -885,6 +885,11 @@ AnimName AnimObj::getCurrentAnim()
 	return currentAnim;
 }
 
+uint8_t AnimObj::getCurrentIndex() const
+{
+	return currentIndex;
+}
+
 bool AnimObj::isCurrentAnimationFinished() const
 {
 	auto found = looping.find(currentAnim);

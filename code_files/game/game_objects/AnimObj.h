@@ -100,6 +100,7 @@ public:
 	void animate(float dt);
 	void animBfrSwap();
 	AnimName getCurrentAnim();
+	uint8_t getCurrentIndex() const;
 	bool isCurrentAnimationFinished() const;
 	void setCurrentAnim(AnimName anim);
 	void setCurrentIndex(int idx);

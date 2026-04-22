@@ -27,4 +27,7 @@ public:
 	float jumpPeakY{ 0.0f };
 	float jumpExpectedHeight{ 1.0f };
 	int jumpAnimFramesInAir{ 0 };
+
+	int maxHealth{ 25 };
+	int health{ 25 };
 };

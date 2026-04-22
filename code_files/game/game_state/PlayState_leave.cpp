@@ -13,4 +13,10 @@ void PlayState::leaveImpl() {
     {
         tmap.reset();
     }
+
+    mPlayerShots.clear();
+    mEnemyShots.clear();
+    mEnemies.clear();
+    mDamagePops.clear();
+    mHealthPickups.clear();
 }

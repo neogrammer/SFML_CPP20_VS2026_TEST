@@ -17,6 +17,7 @@ void PlayState::handleStaticInputImpl(float dt)
     const bool right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
     const bool left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     const bool jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+    const bool shoot = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter);
 
     // Store raw intent on the player. Movement and animation both read these
     // same flags, so controls, physics, and pose selection stay in agreement.
@@ -25,6 +26,8 @@ void PlayState::handleStaticInputImpl(float dt)
 
     player->jumpPressedThisFrame = jump && !player->jumpHeld;
     player->jumpHeld = jump;
+    player->shootPressedThisFrame = shoot && !player->shootHeld;
+    player->shootHeld = shoot;
 
     sf::Vector2f velocity = player->copy->getVelSafe();
 
