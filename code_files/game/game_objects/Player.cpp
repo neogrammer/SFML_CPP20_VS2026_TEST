@@ -34,6 +34,18 @@ namespace
 	constexpr float LiftOffToRisingPercent = 0.10f;
 	constexpr float JumpPeakBeforeTopPercent = 0.05f;
 	constexpr float FallingAfterPeakPercent = 0.05f;
+	constexpr float DashStartSeconds = 0.14f;
+	constexpr float DashTravelSeconds = 0.12f;
+	constexpr float DashEndSeconds = 0.14f;
+	constexpr float DashSpeed = 760.0f;
+	constexpr float DashEndSpeed = GroundRunVelocity * 0.35f;
+	constexpr float WallSlideMaxFallSpeed = 240.0f;
+	constexpr float WallKickHorizontalSpeed = 700.0f;
+	constexpr float WallKickVerticalSpeed = -2150.0f;
+	constexpr float WallKickLockSeconds = 0.08f;
+	constexpr float WallLandSeconds = 0.10f;
+	constexpr float WallReattachLockSeconds = 0.12f;
+	constexpr float WallReattachUnlockDistance = 28.0f;
 
 	struct SweepHit
 	{
@@ -305,17 +317,30 @@ void Player::handleInput()
 	const bool right = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 	const bool left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
 	const bool jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+	const bool dash =
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 	const bool shoot = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter);
 
+	movingRight = right && !left;
+	movingLeft = left && !right;
 	rightHeld = right;
 	leftHeld = left;
 
 	jumpPressedThisFrame = jump && !jumpHeld;
 	jumpHeld = jump;
+	dashPressedThisFrame = dash && !dashHeld;
+	dashHeld = dash;
 	shootPressedThisFrame = shoot && !shootHeld;
 	shootHeld = shoot;
 
 	sf::Vector2f velocity = copy->getVelSafe();
+	if (isHorizontalMovementLocked())
+	{
+		copy->setVel(velocity);
+		return;
+	}
+
 	const float moveSpeed = grounded ? GroundRunVelocity : AirRunVelocity;
 
 	if (right == left)
@@ -345,9 +370,12 @@ void Player::update(float dt, std::size_t activeShotCount, std::size_t maxShots)
 
 	frameDt = dt;
 	updateCombatTimers(dt);
+	updateMobilityTimers(dt);
 
 	if (isDamageLocked())
 	{
+		clearDashState();
+		clearWallState();
 		clearInputIntent();
 
 		sf::Vector2f velocity{ 0.0f, 0.0f };
@@ -365,8 +393,20 @@ void Player::update(float dt, std::size_t activeShotCount, std::size_t maxShots)
 
 	if (jumpPressedThisFrame && wasGroundedAtFrameStart)
 	{
+		clearDashState();
 		copy->setVel({ copy->getVelSafe().x, JumpVelocity });
 		copy->justLeftGround = true;
+	}
+	else if (dashPressedThisFrame && canStartDash())
+	{
+		const int requestedDirection =
+			(rightHeld == leftHeld) ? (copy->isFacingRight() ? 1 : -1) : (rightHeld ? 1 : -1);
+		startDash(requestedDirection);
+	}
+
+	if (!wasGroundedAtFrameStart && (dashStarting || dashing || dashEnding))
+	{
+		clearDashState();
 	}
 
 	const bool shouldApplyGravity =
@@ -375,6 +415,7 @@ void Player::update(float dt, std::size_t activeShotCount, std::size_t maxShots)
 		copy->justLeftGround;
 
 	copy->setAccleration({ 0.0f, shouldApplyGravity ? GravityPerFrame : 0.0f });
+	applyAbilityMovement();
 	updatePhysics(dt);
 
 	shotSpawnRequested = tryStartShot(activeShotCount, maxShots);
@@ -391,6 +432,7 @@ void Player::ResolveClosestCollisionsFirst(const CollisionBatch& collisions)
 	Physics::moveFirstOutsideVector(this, collisions.tileSolids, true);
 	snapToGroundIfStanding(*this, collisions.tileSolids);
 	copy->setJustLanded(!wasGroundedAtFrameStart && copy->grounded);
+	updateWallInteractionState();
 
 	const Physics::Box playerBox = Physics::getBox(copy);
 	for (HealthPickup* pickup : collisions.healthPickups)
@@ -449,6 +491,352 @@ void Player::resetCombatState()
 	hitStunTimer = 0.0f;
 	hitKnockbackTimer = 0.0f;
 	hitKnockbackVelocityX = 0.0f;
+	clearDashState();
+	clearWallState();
+	dashDirection = 1;
+	jumpAnimPhase = PlayerJumpAnimPhase::Grounded;
+	jumpAnimFramesInAir = 0;
+}
+
+bool Player::isHorizontalMovementLocked() const
+{
+	return dashStarting || dashing || dashEnding || wallKicking || isDamageLocked();
+}
+
+bool Player::canStartDash() const
+{
+	return copy != nullptr &&
+		wasGroundedAtFrameStart &&
+		!dashStarting &&
+		!dashing &&
+		!dashEnding &&
+		!wallSliding &&
+		!wallLanding &&
+		!wallKicking &&
+		!isDamageLocked();
+}
+
+void Player::clearDashState()
+{
+	dashStarting = false;
+	dashing = false;
+	dashEnding = false;
+	dashStartTimer = 0.0f;
+	dashActiveTimer = 0.0f;
+	dashEndTimer = 0.0f;
+}
+
+void Player::clearWallState()
+{
+	wallKicking = false;
+	wallLanding = false;
+	wallSliding = false;
+	wallKickTimer = 0.0f;
+	wallKickDirection = 0;
+	wallLandingTimer = 0.0f;
+	wallReattachLockTimer = 0.0f;
+	wallDetachSide = 0;
+	activeWallSide = 0;
+	wallDetachReferenceX = 0.0f;
+}
+
+void Player::updateMobilityTimers(float dt)
+{
+	if (dashStarting)
+	{
+		dashStartTimer = std::max(0.0f, dashStartTimer - dt);
+		if (dashStartTimer <= 0.0f)
+		{
+			dashStarting = false;
+			dashing = true;
+			dashActiveTimer = DashTravelSeconds;
+		}
+	}
+	else if (dashing)
+	{
+		dashActiveTimer = std::max(0.0f, dashActiveTimer - dt);
+		if (dashActiveTimer <= 0.0f)
+		{
+			beginDashEnd();
+		}
+	}
+	else if (dashEnding)
+	{
+		dashEndTimer = std::max(0.0f, dashEndTimer - dt);
+		if (dashEndTimer <= 0.0f)
+		{
+			dashEnding = false;
+		}
+	}
+
+	if (wallKicking)
+	{
+		wallKickTimer = std::max(0.0f, wallKickTimer - dt);
+		if (wallKickTimer <= 0.0f)
+		{
+			wallKicking = false;
+			wallKickDirection = 0;
+		}
+	}
+
+	if (wallLanding)
+	{
+		wallLandingTimer = std::max(0.0f, wallLandingTimer - dt);
+		if (wallLandingTimer <= 0.0f)
+		{
+			wallLanding = false;
+		}
+	}
+
+	if (wallReattachLockTimer > 0.0f)
+	{
+		wallReattachLockTimer = std::max(0.0f, wallReattachLockTimer - dt);
+
+		bool clearedEnoughSpaceToReattach = false;
+		if (copy != nullptr && wallDetachSide != 0)
+		{
+			const float playerCenterX = copy->getPosSafe().x + (copy->getSizeSafe().x * 0.5f);
+			const float movedAwayFromDetachedWall =
+				(playerCenterX - wallDetachReferenceX) * static_cast<float>(-wallDetachSide);
+
+			// Only require a small pop away from the wall before the player can
+			// steer back in and chain upward wall jumps.
+			clearedEnoughSpaceToReattach = movedAwayFromDetachedWall >= WallReattachUnlockDistance;
+		}
+
+		if (wallReattachLockTimer <= 0.0f || clearedEnoughSpaceToReattach)
+		{
+			wallReattachLockTimer = 0.0f;
+			wallDetachSide = 0;
+		}
+	}
+}
+
+void Player::applyAbilityMovement()
+{
+	if (copy == nullptr)
+	{
+		return;
+	}
+
+	sf::Vector2f velocity = copy->getVelSafe();
+
+	if (dashStarting || dashing)
+	{
+		velocity.x = DashSpeed * static_cast<float>(dashDirection);
+		velocity.y = 0.0f;
+	}
+	else if (dashEnding)
+	{
+		velocity.x = DashEndSpeed * static_cast<float>(dashDirection);
+		velocity.y = 0.0f;
+	}
+	else if (wallKicking)
+	{
+		velocity.x = WallKickHorizontalSpeed * static_cast<float>(wallKickDirection);
+	}
+
+	copy->setVel(velocity);
+}
+
+void Player::startDash(int direction)
+{
+	if (copy == nullptr)
+	{
+		return;
+	}
+
+	clearWallState();
+	clearDashState();
+
+	dashDirection = (direction >= 0) ? 1 : -1;
+	dashStarting = true;
+	dashStartTimer = DashStartSeconds;
+	setFacingRightCpy(dashDirection > 0);
+	copy->setVel({ DashSpeed * static_cast<float>(dashDirection), 0.0f });
+}
+
+void Player::beginDashEnd()
+{
+	if (dashEnding)
+	{
+		return;
+	}
+
+	dashStarting = false;
+	dashing = false;
+	dashEnding = true;
+	dashEndTimer = DashEndSeconds;
+}
+
+void Player::startWallKick(int wallSide)
+{
+	if (copy == nullptr || wallSide == 0)
+	{
+		return;
+	}
+
+	clearDashState();
+	wallSliding = false;
+	wallLanding = false;
+	wallLandingTimer = 0.0f;
+	wallKicking = true;
+	wallKickTimer = WallKickLockSeconds;
+	wallKickDirection = -wallSide;
+	wallReattachLockTimer = WallReattachLockSeconds;
+	wallDetachSide = wallSide;
+	activeWallSide = 0;
+	wallDetachReferenceX = copy->getPosSafe().x + (copy->getSizeSafe().x * 0.5f);
+
+	setFacingRightCpy(wallKickDirection > 0);
+	copy->grounded = false;
+	copy->justLeftGround = true;
+	copy->setJustLanded(false);
+	copy->setVel({
+		WallKickHorizontalSpeed * static_cast<float>(wallKickDirection),
+		WallKickVerticalSpeed
+	});
+
+	jumpAnimPhase = PlayerJumpAnimPhase::LiftOff;
+	jumpAnimFramesInAir = 0;
+	jumpStartY = copy->getPosSafe().y;
+	jumpPeakY = copy->getPosSafe().y;
+	jumpExpectedHeight = estimateJumpHeight(
+		(frameDt > 0.0f) ? frameDt : (1.0f / 60.0f),
+		WallKickVerticalSpeed,
+		GravityPerFrame
+	);
+}
+
+int Player::getWallSideFromContacts() const
+{
+	if (copy == nullptr)
+	{
+		return 0;
+	}
+
+	const bool touchingLeftWall = copy->contact[3] != nullptr;
+	const bool touchingRightWall = copy->contact[1] != nullptr;
+
+	if (touchingLeftWall && touchingRightWall)
+	{
+		if (leftHeld != rightHeld)
+		{
+			return leftHeld ? -1 : 1;
+		}
+
+		return facingRight ? 1 : -1;
+	}
+
+	if (touchingLeftWall)
+	{
+		return -1;
+	}
+
+	if (touchingRightWall)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+bool Player::isPressingTowardWall(int wallSide) const
+{
+	if (wallSide < 0)
+	{
+		return leftHeld;
+	}
+
+	if (wallSide > 0)
+	{
+		return rightHeld;
+	}
+
+	return false;
+}
+
+void Player::updateWallInteractionState()
+{
+	if (copy == nullptr)
+	{
+		return;
+	}
+
+	if (copy->grounded)
+	{
+		clearWallState();
+		return;
+	}
+
+	const int wallSide = getWallSideFromContacts();
+	const bool touchingWall = wallSide != 0;
+
+	if (touchingWall && (dashStarting || dashing))
+	{
+		beginDashEnd();
+	}
+
+	const bool sameWallLocked =
+		wallReattachLockTimer > 0.0f &&
+		wallSide != 0 &&
+		wallSide == wallDetachSide;
+
+	if (wallKicking)
+	{
+		activeWallSide = 0;
+		return;
+	}
+
+	if (touchingWall && !sameWallLocked && jumpPressedThisFrame)
+	{
+		startWallKick(wallSide);
+		return;
+	}
+
+	const bool wantsWallSlide =
+		touchingWall &&
+		!sameWallLocked &&
+		!dashStarting &&
+		!dashing &&
+		!dashEnding &&
+		isPressingTowardWall(wallSide);
+
+	if (!wantsWallSlide)
+	{
+		wallSliding = false;
+		wallLanding = false;
+		wallLandingTimer = 0.0f;
+		activeWallSide = 0;
+		return;
+	}
+
+	const bool newlyLatched = !wallSliding || activeWallSide != wallSide;
+	activeWallSide = wallSide;
+	wallSliding = true;
+
+	if (newlyLatched)
+	{
+		wallLanding = true;
+		wallLandingTimer = WallLandSeconds;
+	}
+	else
+	{
+		wallLanding = wallLandingTimer > 0.0f;
+	}
+
+	setFacingRightCpy(wallSide > 0);
+
+	sf::Vector2f velocity = copy->getVelSafe();
+	velocity.x = 0.0f;
+	if (velocity.y > WallSlideMaxFallSpeed)
+	{
+		velocity.y = WallSlideMaxFallSpeed;
+	}
+
+	copy->setVel(velocity);
+	copy->grounded = false;
+	copy->setJustLanded(false);
 }
 
 void Player::updateCombatTimers(float dt)
@@ -527,6 +915,26 @@ sf::Vector2f Player::getShotSpawnPosition(float shotRadius)
 	else if (anim == AnimName::LandingShoot)
 	{
 		y = currentSize.y * 0.52f;
+	}
+	else if (anim == AnimName::DashStartShoot || anim == AnimName::DashingShoot)
+	{
+		x += right ? 8.0f : -8.0f;
+		y = currentSize.y * 0.40f;
+	}
+	else if (anim == AnimName::DashEndShoot)
+	{
+		x += right ? 6.0f : -6.0f;
+		y = currentSize.y * 0.46f;
+	}
+	else if (anim == AnimName::WallKickShoot)
+	{
+		x += right ? 4.0f : -4.0f;
+		y = currentSize.y * 0.30f;
+	}
+	else if (anim == AnimName::WallLandShoot || anim == AnimName::WallSlideShoot)
+	{
+		x += right ? 2.0f : -2.0f;
+		y = currentSize.y * 0.34f;
 	}
 	else if (!isShootAnim(anim))
 	{
@@ -640,6 +1048,8 @@ bool Player::takeDamage(int damage, sf::Vector2f damageSource)
 	hitFlashTimer = HitFlashSeconds;
 	hitStunTimer = DamageStunSeconds;
 	hitKnockbackTimer = DamageKnockbackSeconds;
+	clearDashState();
+	clearWallState();
 
 	const sf::Vector2f center = getCenter();
 	const bool sourceIsLeft = damageSource.x < center.x;
